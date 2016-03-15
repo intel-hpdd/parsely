@@ -1,0 +1,9 @@
+[ignore]
+.*/parsely/dist.*
+.*\(lib\|test\|builtin-modules\|binary-extensions\|faker\|spdx\).*\.json
+
+[include]
+
+[libs]
+
+[options]
