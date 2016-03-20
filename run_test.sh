@@ -15,5 +15,5 @@ do
     npm i
     npm run cover -- --reporter=cobertura
     mv ./coverage/cobertura-coverage.xml ../coverage
-    mv node-babel-boilerplate-results*.xml ../results
+    mv parsely-results-*.xml ../results
 done
