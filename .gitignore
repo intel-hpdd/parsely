@@ -1,0 +1,7 @@
+node_modules
+*.iml
+*.log
+.idea
+dist
+coverage
+.nyc_output
