@@ -25,7 +25,7 @@
 type lexerType = {
   name: string;
   pattern: RegExp;
-  ignore: ?boolean;
+  ignore?: boolean;
 };
 
 getLexer.whiteSpace = {
