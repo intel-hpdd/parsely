@@ -1,14 +1,14 @@
 {
   "name": "intel-parsely",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Boilerplate for node projects",
   "main": "dist/source/index.js",
   "scripts": {
-    "test:dev": "npm run prepublish && npm t",
+    "test:dev": "npm run postversion && npm t",
     "test": "NODE_ENV=test ./bin/test.js",
     "eslint": "eslint ./",
     "jscs": "jscs .",
-    "prepublish": "./bin/build.sh",
+    "postversion": "./bin/build.sh",
     "cover:dev": "npm run cover -- --reporter=html --reporter=lcov",
     "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm t"
   },
