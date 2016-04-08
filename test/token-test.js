@@ -58,7 +58,7 @@ describe('parser token', () => {
     expect(fn([
       {
         name: 'baz',
-        character: 0
+        start: 0
       }
     ]).result.message).toEqual('Expected foo got baz at character 0');
   });
