@@ -38,7 +38,8 @@ getLexer.whiteSpace = {
 export type token = {
   content: string;
   name: string;
-  character: number;
+  start: number;
+  end: number;
   next: token;
   prev: token;
 }
@@ -64,7 +65,8 @@ function getLexer (types: Array<lexerType>): Function {
             arr.push({
               content: content,
               name: type.name,
-              character: ptr
+              start: ptr,
+              end: ptr + content.length
             });
 
           var len = content.length;
@@ -78,14 +80,14 @@ function getLexer (types: Array<lexerType>): Function {
 
       if (!foundMatch && str.length) {
         var errContent = consumeError(str);
+        var len = errContent.length;
 
         arr.push({
           content: errContent,
           name: 'error',
-          character: ptr
+          start: ptr,
+          end: ptr + len
         });
-
-        var len = errContent.length;
 
         ptr += len;
         str = str.substring(len);

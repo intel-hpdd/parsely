@@ -47,6 +47,6 @@ export default curry(3, function token (name:string, outFn:Function, tokens: tok
   return {
     tokens,
     consumed: 0,
-    result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.character}`)
+    result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.start}`)
   };
 });
