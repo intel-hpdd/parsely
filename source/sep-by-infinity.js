@@ -32,7 +32,7 @@ type tokensToResult = (tokens:tokens) => {
   result: Error | string;
 }
 
-export default curry(3, function sepByInfinity (symbolFn:Function, sepFn:tokensToResult, tokens:tokensToResult) {
+export default curry(3, function sepByInfinity (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:tokens) {
   var err;
   var out = {
     tokens,
@@ -46,13 +46,13 @@ export default curry(3, function sepByInfinity (symbolFn:Function, sepFn:tokensT
     if (parsed.result instanceof Error) {
       err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
       break;
+    } else {
+      out = {
+        tokens: parsed.tokens,
+        consumed: out.consumed + parsed.consumed,
+        result: out.result.concat(parsed.result)
+      };
     }
-
-    out = {
-      tokens: parsed.tokens,
-      consumed: out.consumed + parsed.consumed,
-      result: out.result.concat(parsed.result)
-    };
 
     const sepParsed = sepFn(out.tokens);
 
