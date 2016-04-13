@@ -30,4 +30,5 @@ export {default as optional} from './optional.js';
 export {default as parse} from './parse.js';
 export {default as sepBy1} from './sep-by-1.js';
 export {default as token} from './token.js';
+export {default as tokenError} from './token-error.js';
 export {default as sepByInfinity} from './sep-by-infinity.js';

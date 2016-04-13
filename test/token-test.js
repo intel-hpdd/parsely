@@ -3,7 +3,7 @@ import {__, always} from 'intel-fp';
 import {describe, beforeEach, it, expect, jasmine} from './jasmine';
 import token from '../source/token';
 
-describe('parser token', () => {
+describe('token', () => {
   var fn;
 
   beforeEach(() => {
@@ -27,6 +27,7 @@ describe('parser token', () => {
       name: 'foo'
     }])).toEqual({
       tokens: [],
+      suggest: [],
       consumed: 1,
       result: 'bar'
     });

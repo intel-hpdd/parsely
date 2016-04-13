@@ -21,50 +21,44 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokens} from './get-lexer.js';
-import type {result} from './token-error.js';
+import type {tokens, token} from './get-lexer';
+import {lensProp, view, curry} from 'intel-fp';
 
-import {curry} from 'intel-fp';
+export type result = {
+  tokens: tokens;
+  consumed: number;
+  suggest: Array<?string>;
+  result: Error | string;
+};
 
-type tokensToResult = (tokens:tokens) => result;
+const viewName = view(lensProp('name'));
 
-export default curry(3, function sepByInfinity (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:tokens) {
-  var err;
-  var out = {
+type tokenToAny = (token:token) => any;
+type resultToResult = (result:result) => result;
+
+export default curry(4, function token (name:string, outFn:tokenToAny, errorFn:resultToResult, tokens:tokens) {
+  if (tokens.length === 0)
+    return errorFn({
+      tokens,
+      suggest: [name],
+      consumed: 0,
+      result: new Error(`Expected ${name} got end of string`)
+    });
+
+  const [t, ...tokensRest] = tokens;
+
+  if (viewName(t) === name)
+    return {
+      tokens: tokensRest,
+      suggest: [],
+      consumed: 1,
+      result: outFn(t)
+    };
+
+  return errorFn({
     tokens,
-    suggest: [],
+    suggest: [name],
     consumed: 0,
-    result: ''
-  };
-
-  while (true) {
-    const parsed = symbolFn(out.tokens);
-
-    if (parsed.result instanceof Error) {
-      err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
-      break;
-    } else {
-      out = {
-        tokens: parsed.tokens,
-        suggest: [],
-        consumed: out.consumed + parsed.consumed,
-        result: out.result.concat(parsed.result)
-      };
-    }
-
-    const sepParsed = sepFn(out.tokens);
-
-    if (sepParsed.result instanceof Error) {
-      err = { ...sepParsed, consumed: out.consumed + sepParsed.consumed };
-      break;
-    } else {
-      out = {
-        tokens: sepParsed.tokens,
-        consumed: out.consumed + sepParsed.consumed,
-        result: out.result.concat(sepParsed.result)
-      };
-    }
-  }
-
-  return err;
+    result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.start}`)
+  });
 });
