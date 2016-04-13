@@ -21,13 +21,52 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-export {default as chainL1} from './chainL1.js';
-export {default as choice} from './choice.js';
-export {default as endOfString} from './end-of-string.js';
-export {default as getLexer} from './get-lexer.js';
-export {default as manyTill} from './many-till.js';
-export {default as optional} from './optional.js';
-export {default as parse} from './parse.js';
-export {default as sepBy1} from './sep-by-1.js';
-export {default as token} from './token.js';
-export {default as sepByInfinity} from './sep-by-infinity.js';
+import type tokens from './get-lexer';
+
+import {curry} from 'intel-fp';
+
+type tokensToResult = (tokens:tokens) => {
+  tokens: tokens;
+  consumed: number;
+  suggest: Array<string>;
+  result: Error | string;
+}
+
+export default curry(3, function sepByInfinity (symbolFn:Function, sepFn:tokensToResult, tokens:tokensToResult) {
+  var err;
+  var out = {
+    tokens,
+    consumed: 0,
+    result: ''
+  };
+
+  while (true) {
+    const parsed = symbolFn(out.tokens);
+
+    if (parsed.result instanceof Error) {
+      err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
+      break;
+    }
+
+    out = {
+      tokens: parsed.tokens,
+      consumed: out.consumed + parsed.consumed,
+      result: out.result.concat(parsed.result)
+    };
+
+    const sepParsed = sepFn(out.tokens);
+
+    if (sepParsed.result instanceof Error) {
+      err = { ...sepParsed, consumed: out.consumed + sepParsed.consumed };
+      break;
+    } else {
+      out = {
+        tokens: sepParsed.tokens,
+        consumed: out.consumed + sepParsed.consumed,
+        result: out.result.concat(sepParsed.result)
+      };
+    }
+  }
+
+  return err;
+});
