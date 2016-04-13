@@ -33,7 +33,8 @@ export default curry(2, function choice (choices: Array<Function>, tokens: token
     const parsed = fn(tokens);
 
     if (parsed.result instanceof Error) {
-      errors[parsed.consumed] = parsed;
+      errors[parsed.consumed] = errors[parsed.consumed] || [];
+      errors[parsed.consumed].push(parsed);
       return false;
     } else {
       out = parsed;
@@ -41,5 +42,20 @@ export default curry(2, function choice (choices: Array<Function>, tokens: token
     }
   });
 
-  return out ? out : errors.pop();
+  if (out)
+    return out;
+
+  const errs = errors.pop();
+
+  if (errs.length === 1)
+    return errs.pop();
+
+  return errs.reduce((out, result, idx) => {
+    return {
+      ...out,
+      ...result,
+      suggest: out.suggest.concat(result.suggest),
+      result: new Error(`${out.result.message}${idx === 0 ? '' : ','} ${result.suggest}`)
+    };
+  }, {suggest: [], result: new Error('Expected one of')});
 });

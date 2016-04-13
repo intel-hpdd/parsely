@@ -23,12 +23,14 @@ describe('parser choice', () => {
         if (name === t.name)
           return {
             tokens: restTokens,
+            suggest: [],
             consumed: 1,
             result: t.content
           };
 
         return {
           tokens,
+          suggest: [name],
           consumed: 1,
           result: new Error('boom!')
         };
@@ -42,46 +44,76 @@ describe('parser choice', () => {
     });
 
     it('should match a', () => {
-      expect(chooser([{
-        name: 'a',
-        content: 'eeey'
-      }])).toEqual({
-        tokens: [],
-        consumed: 1,
-        result: 'eeey'
-      });
+      expect(
+        chooser(
+          [
+            {
+              name: 'a',
+              content: 'eeey'
+            }
+          ]
+        )
+      )
+      .toEqual(
+        {
+          tokens: [],
+          suggest: [],
+          consumed: 1,
+          result: 'eeey'
+        }
+      );
     });
 
     it('should match b', () => {
-      expect(chooser([{
-        name: 'b',
-        content: 'beee'
-      }])).toEqual({
-        tokens: [],
-        consumed: 1,
-        result: 'beee'
-      });
+      expect(
+        chooser(
+          [
+            {
+              name: 'b',
+              content: 'beee'
+            }
+          ]
+        )
+      )
+      .toEqual(
+        {
+          tokens: [],
+          suggest: [],
+          consumed: 1,
+          result: 'beee'
+        }
+      );
     });
 
     it('should return an error', () => {
-      expect(chooser([{
-        name: 'c',
-        content: 'seee'
-      }])).toEqual({
-        tokens: [
-          {
-            name: 'c',
-            content: 'seee'
-          }
-        ],
-        consumed: 1,
-        result: new Error('boom!')
-      });
+      expect(
+        chooser(
+          [
+            {
+              name: 'c',
+              content: 'seee'
+            }
+          ]
+        )
+      )
+      .toEqual(
+        {
+          tokens: [
+            {
+              name: 'c',
+              content: 'seee'
+            }
+          ],
+          suggest: ['a', 'b'],
+          consumed: 1,
+          result: new Error('Expected one of a, b')
+        }
+      );
     });
   });
 
   it('should return the most specific error', () => {
-    var takeN = curry(2,  (n, tokens) => {
+    const takeN = curry(2,  (n, tokens) => {
       return {
         tokens,
         consumed: n,
@@ -89,13 +121,16 @@ describe('parser choice', () => {
       };
     });
 
-    var result = choice([
-      takeN(2),
-      takeN(1)
-    ], [
-      {},
-      {}
-    ]);
+    const result = choice(
+      [
+        takeN(2),
+        takeN(1)
+      ],
+      [
+        {},
+        {}
+      ]
+    );
 
     expect(result).toEqual({
       tokens: [{}, {}],
