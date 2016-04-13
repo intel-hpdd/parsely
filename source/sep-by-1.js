@@ -26,7 +26,7 @@ import type tokens from './get-lexer';
 import {curry} from 'intel-fp';
 
 export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, tokens: tokens) {
-  var err, lastOut;
+  var err;
   var out = {
     tokens,
     consumed: 0,
@@ -37,9 +37,6 @@ export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, to
     const parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
-      if (lastOut)
-        out = lastOut;
-
       err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
       break;
     }
@@ -52,10 +49,14 @@ export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, to
 
     const sepParsed = sepFn(out.tokens);
 
-    if (sepParsed.result instanceof Error)
+    if (sepParsed.result instanceof Error) {
+      out = {
+        ...out,
+        tokens: out.tokens.slice(sepParsed.consumed),
+        consumed: out.consumed + sepParsed.consumed
+      };
       break;
-
-    lastOut = out;
+    }
 
     out = {
       tokens: sepParsed.tokens,
@@ -64,5 +65,5 @@ export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, to
     };
   }
 
-  return out.consumed > 0 ? out : err;
+  return err ? err : out;
 });
