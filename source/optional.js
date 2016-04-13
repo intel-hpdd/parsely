@@ -22,13 +22,17 @@
 // express and approved by Intel in writing.
 
 import type {tokens} from './get-lexer';
+import type {result} from './token-error.js';
 
 import {curry} from 'intel-fp';
 
-export default curry(2, function optional (p: Function, tokens: tokens) {
+type tokensToResult = (tokens:tokens) => result;
+
+export default curry(2, function optional (p:tokensToResult, tokens:tokens):result {
   if (!tokens.length)
     return {
       tokens,
+      suggest: [],
       consumed: 0,
       result: ''
     };

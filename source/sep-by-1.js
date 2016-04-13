@@ -21,14 +21,18 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type tokens from './get-lexer';
-
 import {curry} from 'intel-fp';
 
-export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, tokens: tokens) {
+import type {tokens} from './get-lexer';
+import type {result} from './token-error.js';
+
+type tokensToResult = (tokens:tokens) => result;
+
+export default curry(3, function sepBy1 (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:tokens):result {
   var err;
   var out = {
     tokens,
+    suggest: [],
     consumed: 0,
     result: ''
   };
@@ -39,13 +43,16 @@ export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, to
     if (parsed.result instanceof Error) {
       err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
       break;
+    } else {
+      out = {
+        tokens: parsed.tokens,
+        suggest: [],
+        consumed: out.consumed + parsed.consumed,
+        result: out.result.concat(parsed.result)
+      };
     }
 
-    out = {
-      tokens: parsed.tokens,
-      consumed: out.consumed + parsed.consumed,
-      result: out.result.concat(parsed.result)
-    };
+
 
     const sepParsed = sepFn(out.tokens);
 
@@ -56,13 +63,14 @@ export default curry(3, function sepBy1 (symbolFn: Function, sepFn: Function, to
         consumed: out.consumed + sepParsed.consumed
       };
       break;
+    } else {
+      out = {
+        tokens: sepParsed.tokens,
+        suggest: [],
+        consumed: out.consumed + sepParsed.consumed,
+        result: out.result.concat(sepParsed.result)
+      };
     }
-
-    out = {
-      tokens: sepParsed.tokens,
-      consumed: out.consumed + sepParsed.consumed,
-      result: out.result.concat(sepParsed.result)
-    };
   }
 
   return err ? err : out;

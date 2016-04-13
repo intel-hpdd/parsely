@@ -21,14 +21,18 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type tokens from './get-lexer';
-
 import {curry} from 'intel-fp';
 
-export default curry(3, function parse (initFn:Function, fns:Array<Function>, tokens: tokens) {
+import type {tokens} from './get-lexer';
+import type {result} from './token-error.js';
+
+type tokensToResult = (tokens:tokens) => result;
+
+export default curry(3, function parse (initFn:() => string | Error, fns:Array<tokensToResult>, tokens:tokens) {
 
   const out = {
     tokens,
+    suggest: [],
     consumed: 0,
     result: initFn()
   };
@@ -44,6 +48,7 @@ export default curry(3, function parse (initFn:Function, fns:Array<Function>, to
 
     return {
       tokens: result.tokens,
+      suggest: [],
       consumed: curr.consumed + result.consumed,
       result: curr.result.concat(result.result)
     };

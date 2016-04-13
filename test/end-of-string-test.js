@@ -10,6 +10,7 @@ describe('parser end of string', () => {
   it('should return an empty string if there are no tokens', () => {
     expect(endOfString([])).toEqual({
       tokens: [],
+      suggest: [],
       consumed: 0,
       result: ''
     });
@@ -22,6 +23,7 @@ describe('parser end of string', () => {
       tokens: [{
         name: 'foo'
       }],
+      suggest: ['foo'],
       consumed: 0,
       result: new Error('Expected end of string got foo')
     });

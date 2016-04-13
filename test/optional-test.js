@@ -20,6 +20,7 @@ describe('parser optional', function () {
   it('should return an empty string if there are no tokens', function () {
     expect(optional(spy, [])).toEqual({
       tokens: [],
+      suggest: [],
       consumed: 0,
       result: ''
     });

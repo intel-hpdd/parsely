@@ -22,13 +22,17 @@
 // express and approved by Intel in writing.
 
 import type {tokens} from './get-lexer';
+import type {result} from './token-error.js';
 
 import {curry} from 'intel-fp';
 
-export default curry(3, function manyTill (symbolFn: Function, endFn: Function, tokens: tokens) {
+type tokensToResult = (tokens:tokens) => result;
+
+export default curry(3, function manyTill (symbolFn:tokensToResult, endFn:tokensToResult, tokens:tokens):result {
   var err;
   var out = {
     tokens,
+    suggest: [],
     consumed: 0,
     result: ''
   };
@@ -39,13 +43,14 @@ export default curry(3, function manyTill (symbolFn: Function, endFn: Function, 
     if (parsed.result instanceof Error) {
       err = {...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
       break;
+    } else {
+      out = {
+        tokens: parsed.tokens,
+        suggest: [],
+        consumed: out.consumed + parsed.consumed,
+        result: out.result.concat(parsed.result)
+      };
     }
-
-    out = {
-      tokens: parsed.tokens,
-      consumed: out.consumed + parsed.consumed,
-      result: out.result.concat(parsed.result)
-    };
 
     parsed = endFn(out.tokens);
 

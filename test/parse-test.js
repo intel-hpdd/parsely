@@ -32,6 +32,7 @@ describe('parser parse', () => {
 
     expect(out).toEqual({
       tokens: [],
+      suggest: [],
       consumed: 3,
       result: 'abc'
     });
@@ -59,6 +60,7 @@ describe('parser parse', () => {
 
     expect(out).toEqual({
       tokens: [],
+      suggest: [],
       consumed: 3,
       result: ['a', 'b', 'c']
     });

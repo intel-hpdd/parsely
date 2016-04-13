@@ -36,7 +36,7 @@ const viewName = view(lensProp('name'));
 type tokenToAny = (token:token) => any;
 type resultToResult = (result:result) => result;
 
-export default curry(4, function token (name:string, outFn:tokenToAny, errorFn:resultToResult, tokens:tokens) {
+export default curry(4, function token (name:string, outFn:tokenToAny, errorFn:resultToResult, tokens:tokens):result {
   if (tokens.length === 0)
     return errorFn({
       tokens,
