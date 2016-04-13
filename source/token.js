@@ -21,32 +21,8 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokens} from './get-lexer';
+import tokenError from './token-error.js';
 
-import {lensProp, view, curry} from 'intel-fp';
+import {identity, __} from 'intel-fp';
 
-const viewName = view(lensProp('name'));
-
-export default curry(3, function token (name:string, outFn:Function, tokens: tokens) {
-  if (tokens.length === 0)
-    return {
-      tokens,
-      consumed: 0,
-      result: new Error(`Expected ${name} got end of string`)
-    };
-
-  const [t, ...tokensRest] = tokens;
-
-  if (viewName(t) === name)
-    return {
-      tokens: tokensRest,
-      consumed: 1,
-      result: outFn(t)
-    };
-
-  return {
-    tokens,
-    consumed: 0,
-    result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.start}`)
-  };
-});
+export default tokenError(__, __, identity);
