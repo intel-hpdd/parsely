@@ -110,6 +110,33 @@ describe('parser choice', () => {
         }
       );
     });
+
+    it('should only return unique suggestions', () => {
+      const result = choice(
+        [
+          matcher('a'),
+          matcher('a')
+        ]
+      )(
+        [
+          {
+            name: 'c',
+            content: 'seee'
+          }
+        ]
+      );
+
+      expect(result).toEqual(
+        {
+          tokens: [
+            { name: 'c', content: 'seee' }
+          ],
+          suggest: [ 'a' ],
+          consumed: 1,
+          result: new Error('boom!')
+        }
+      );
+    });
   });
 
   it('should return the most specific error', () => {
