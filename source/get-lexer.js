@@ -22,6 +22,8 @@
 // express and approved by Intel in writing.
 
 
+import type {lexerTokens} from './index.js';
+
 type lexerType = {
   name: string;
   pattern: RegExp;
@@ -34,22 +36,10 @@ getLexer.whiteSpace = {
   ignore: true
 };
 
-
-export type token = {
-  content: string;
-  name: string;
-  start: number;
-  end: number;
-  next: token;
-  prev: token;
-}
-
-export type tokens = Array<token>;
-
 export default getLexer;
 
-function getLexer (types: Array<lexerType>): Function {
-  return function tokenize (str):tokens {
+function getLexer (types:Array<lexerType>):Function {
+  return function tokenize (str:string):lexerTokens {
     str = str || '';
 
     var matches = (function buildTokens (str, ptr) {

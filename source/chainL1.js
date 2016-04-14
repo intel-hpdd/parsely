@@ -23,15 +23,16 @@
 
 import {curry, identity} from 'intel-fp';
 
-import type {tokens} from './get-lexer';
+import type {lexerTokens, result, tokensToResult} from './index.js';
 
-export default curry(3, function chainL1 (parse:Function, operation:Function, tokens:tokens) {
+export default curry(3, function chainL1 (parse:tokensToResult, operation:Function, tokens:lexerTokens):result {
   var err;
   var fn = identity;
   var out = {
     tokens,
+    suggest: [],
     consumed: 0,
-    result: null
+    result: ''
   };
 
   while (true) {
@@ -58,7 +59,7 @@ export default curry(3, function chainL1 (parse:Function, operation:Function, to
     fn = curry(2, parsedFn.result)(out.result);
   }
 
-  return out.result !== null ? out : err;
+  return err ? err : out;
 });
 
 function throwIfBadType (x) {

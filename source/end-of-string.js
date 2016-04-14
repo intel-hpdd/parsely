@@ -21,12 +21,13 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokens} from './get-lexer';
+import type {lexerTokens, result} from './index.js';
 
-export default function endOfString (tokens:tokens): Object {
+export default function endOfString (tokens:lexerTokens):result {
   if (tokens.length === 0)
     return {
       tokens,
+      suggest: [],
       consumed: 0,
       result: ''
     };
@@ -34,6 +35,7 @@ export default function endOfString (tokens:tokens): Object {
   return {
     tokens,
     consumed: 0,
+    suggest: [tokens[0].name],
     result: new Error('Expected end of string got ' + tokens[0].name)
   };
 }

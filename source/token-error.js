@@ -21,44 +21,40 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokens, token} from './get-lexer';
-import {lensProp, view, curry} from 'intel-fp';
+import type {lexerTokens, lexerToken, result} from './index.js';
 
-export type result = {
-  tokens: tokens;
-  consumed: number;
-  suggest: Array<?string>;
-  result: Error | string;
-};
+import {lensProp, view, curry} from 'intel-fp';
 
 const viewName = view(lensProp('name'));
 
-type tokenToAny = (token:token) => any;
+type tokenToAny = (token:lexerToken) => any;
 type resultToResult = (result:result) => result;
 
-export default curry(4, function token (name:string, outFn:tokenToAny, errorFn:resultToResult, tokens:tokens) {
-  if (tokens.length === 0)
+export default curry(4,
+  function token (name:string, outFn:tokenToAny, errorFn:resultToResult, tokens:lexerTokens):result {
+    if (tokens.length === 0)
+      return errorFn({
+        tokens,
+        suggest: [name],
+        consumed: 0,
+        result: new Error(`Expected ${name} got end of string`)
+      });
+
+    const [t, ...tokensRest] = tokens;
+
+    if (viewName(t) === name)
+      return {
+        tokens: tokensRest,
+        suggest: [],
+        consumed: 1,
+        result: outFn(t)
+      };
+
     return errorFn({
       tokens,
       suggest: [name],
       consumed: 0,
-      result: new Error(`Expected ${name} got end of string`)
+      result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.start}`)
     });
-
-  const [t, ...tokensRest] = tokens;
-
-  if (viewName(t) === name)
-    return {
-      tokens: tokensRest,
-      suggest: [],
-      consumed: 1,
-      result: outFn(t)
-    };
-
-  return errorFn({
-    tokens,
-    suggest: [name],
-    consumed: 0,
-    result: new Error(`Expected ${name} got ${viewName(t)} at character ${t.start}`)
-  });
-});
+  }
+);

@@ -53,6 +53,7 @@ describe('parser sepBy1', () => {
     )
       .toEqual({
         tokens: [],
+        suggest: [],
         consumed: 1,
         result: 'bar'
       });
@@ -72,6 +73,7 @@ describe('parser sepBy1', () => {
     )
       .toEqual({
         tokens: [],
+        suggest: [],
         consumed: 3,
         result: 'bar,bar'
       });

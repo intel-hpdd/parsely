@@ -32,3 +32,23 @@ export {default as sepBy1} from './sep-by-1.js';
 export {default as token} from './token.js';
 export {default as tokenError} from './token-error.js';
 export {default as sepByInfinity} from './sep-by-infinity.js';
+
+export type result = {
+  tokens: lexerTokens;
+  consumed: number;
+  suggest: Array<?string>;
+  result: Error | string;
+};
+
+export type tokensToResult = (tokens:lexerTokens) => result;
+
+export type lexerToken = {
+  content: string;
+  name: string;
+  start: number;
+  end: number;
+  next?: lexerToken;
+  prev?: lexerToken;
+}
+
+export type lexerTokens = Array<lexerToken>;
