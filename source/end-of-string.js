@@ -21,10 +21,9 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokens} from './get-lexer.js';
-import type {result} from './token-error.js';
+import type {lexerTokens, result} from './index.js';
 
-export default function endOfString (tokens:tokens):result {
+export default function endOfString (tokens:lexerTokens):result {
   if (tokens.length === 0)
     return {
       tokens,

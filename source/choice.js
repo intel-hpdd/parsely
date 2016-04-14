@@ -23,12 +23,9 @@
 
 import {curry} from 'intel-fp';
 
-import type {tokens} from './get-lexer';
-import type {result} from './token-error.js';
+import type {lexerTokens, result, tokensToResult} from './index.js';
 
-type tokensToResult = (tokens:tokens) => result;
-
-export default curry(2, function choice (choices:Array<tokensToResult>, tokens:tokens):result {
+export default curry(2, function choice (choices:Array<tokensToResult>, tokens:lexerTokens):result {
   var out;
   const errors = [];
 

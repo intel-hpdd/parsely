@@ -23,10 +23,9 @@
 
 import {curry, identity} from 'intel-fp';
 
-import type {tokens} from './get-lexer.js';
-import type {result} from './token-error.js';
+import type {lexerTokens, result, tokensToResult} from './index.js';
 
-export default curry(3, function chainL1 (parse:Function, operation:Function, tokens:tokens):result {
+export default curry(3, function chainL1 (parse:tokensToResult, operation:Function, tokens:lexerTokens):result {
   var err;
   var fn = identity;
   var out = {
