@@ -25,7 +25,7 @@ import type {lexerTokens, result} from './index.js';
 
 import {curry} from 'intel-fp';
 
-export default curry(3, function parse (initFn:() => string, fns:Function, tokens:lexerTokens):result {
+export default curry(3, function parse (initFn:() => string, fns:Array<Function>, tokens:lexerTokens):result {
 
   const out = {
     tokens,
