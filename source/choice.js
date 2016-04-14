@@ -46,16 +46,22 @@ export default curry(2, function choice (choices:Array<tokensToResult>, tokens:l
     return out;
 
   const errs = errors.pop();
+  const err = errs.slice(-1).pop();
 
   if (errs.length === 1)
-    return errs.pop();
+    return err;
 
-  return errs.reduce((out, result, idx) => {
-    return {
-      ...out,
-      ...result,
-      suggest: out.suggest.concat(result.suggest),
-      result: new Error(`${out.result.message}${idx === 0 ? '' : ','} ${result.suggest}`)
-    };
-  }, {suggest: [], result: new Error('Expected one of')});
+  const suggestions = Array.from(errs.reduce((set, err) => {
+    err.suggest.forEach(x => set.add(x));
+    return set;
+  }, new Set()));
+
+  if (suggestions.length === 1)
+    return err;
+
+  return {
+    ...err,
+    suggest: suggestions,
+    result: new Error(`Expected one of ${suggestions.join(', ')}`)
+  };
 });
