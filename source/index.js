@@ -32,6 +32,7 @@ export {default as sepBy1} from './sep-by-1.js';
 export {default as token} from './token.js';
 export {default as tokenError} from './token-error.js';
 export {default as sepByInfinity} from './sep-by-infinity.js';
+export {default as match} from './match.js';
 
 export type result = {
   tokens: lexerTokens;
