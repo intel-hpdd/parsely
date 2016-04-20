@@ -1,6 +1,6 @@
 {
   "name": "intel-parsely",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Boilerplate for node projects",
   "main": "dist/source/index.js",
   "scripts": {
