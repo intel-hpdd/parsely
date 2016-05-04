@@ -21,7 +21,6 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-export {default as chainL1} from './chainL1.js';
 export {default as choice} from './choice.js';
 export {default as endOfString} from './end-of-string.js';
 export {default as getLexer} from './get-lexer.js';
@@ -30,15 +29,20 @@ export {default as optional} from './optional.js';
 export {default as parse} from './parse.js';
 export {default as sepBy1} from './sep-by-1.js';
 export {default as token} from './token.js';
-export {default as tokenError} from './token-error.js';
 export {default as sepByInfinity} from './sep-by-infinity.js';
-export {default as match} from './match.js';
+export {matchValue, matchValueTo} from './match-value.js';
+export {default as tokenTo} from './token-to.js';
+
+import parse from './parse.js';
+export const parseStr = parse(() => '');
+
+import {ParseError} from './error';
+export {ParseError, onSuccess, onError, default as error} from './error';
 
 export type result = {
   tokens: lexerTokens;
   consumed: number;
-  suggest: Array<?string>;
-  result: Error | string;
+  result: ParseError | string;
 };
 
 export type tokensToResult = (tokens:lexerTokens) => result;

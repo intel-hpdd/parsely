@@ -22,19 +22,16 @@
 // express and approved by Intel in writing.
 
 import type {lexerTokens, result} from './index.js';
-
 import {curry} from 'intel-fp';
 
-export default curry(3, function parse (initFn:() => string, fns:Array<Function>, tokens:lexerTokens):result {
-
+export default curry(3, (initFn:() => string, fns:Array<Function>, tokens:lexerTokens):result => {
   const out = {
     tokens,
-    suggest: [],
     consumed: 0,
     result: initFn()
   };
 
-  return fns.reduce(function reducer (curr, fn) {
+  return fns.reduce((curr, fn) => {
     if (curr.result instanceof Error)
       return curr;
 
@@ -47,8 +44,7 @@ export default curry(3, function parse (initFn:() => string, fns:Array<Function>
       };
 
     return {
-      tokens: result.tokens,
-      suggest: [],
+      ...result,
       consumed: curr.consumed + result.consumed,
       result: curr.result.concat(result.result)
     };

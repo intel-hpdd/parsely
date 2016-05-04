@@ -29,7 +29,6 @@ export default curry(3, function sepBy1 (symbolFn:tokensToResult, sepFn:tokensTo
   var err;
   var out = {
     tokens,
-    suggest: [],
     consumed: 0,
     result: ''
   };
@@ -38,12 +37,15 @@ export default curry(3, function sepBy1 (symbolFn:tokensToResult, sepFn:tokensTo
     const parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
-      err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
+      err = {
+        ...parsed,
+        consumed: out.consumed + parsed.consumed,
+        tokens: out.tokens
+      };
       break;
     } else {
       out = {
         tokens: parsed.tokens,
-        suggest: [],
         consumed: out.consumed + parsed.consumed,
         result: out.result.concat(parsed.result)
       };
@@ -63,7 +65,6 @@ export default curry(3, function sepBy1 (symbolFn:tokensToResult, sepFn:tokensTo
     } else {
       out = {
         tokens: sepParsed.tokens,
-        suggest: [],
         consumed: out.consumed + sepParsed.consumed,
         result: out.result.concat(sepParsed.result)
       };

@@ -21,52 +21,14 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry, identity} from 'intel-fp';
+import type {tokensToResult} from './index.js';
+import token from './token.js';
+import {onSuccess} from './error.js';
+import {flow} from 'intel-fp';
 
-import type {lexerTokens, result, tokensToResult} from './index.js';
-
-export default curry(3, function chainL1 (parse:tokensToResult, operation:Function, tokens:lexerTokens):result {
-  var err;
-  var fn = identity;
-  var out = {
-    tokens,
-    suggest: [],
-    consumed: 0,
-    result: ''
-  };
-
-  while (true) {
-    var parsed = parse(out.tokens);
-
-    if (isError(parsed.result)) {
-      err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens };
-      break;
-    }
-
-    var result = fn(parsed.result);
-
-    out = { ...parsed, consumed: out.consumed + parsed.consumed, result };
-
-    var parsedFn = operation(out.tokens);
-
-    if (isError(parsedFn.result))
-      break;
-
-    throwIfBadType(parsedFn.result);
-
-    out = { ...parsedFn, consumed: out.consumed + parsedFn.consumed, result: out.result };
-
-    fn = curry(2, parsedFn.result)(out.result);
-  }
-
-  return err ? err : out;
-});
-
-function throwIfBadType (x) {
-  if (typeof x !== 'function')
-    throw new Error('operation result must be an Error or a Function, got: ' + typeof x);
-}
-
-function isError (x) {
-  return x instanceof Error;
-}
+export default (name:string, out:string):tokensToResult => {
+  return flow(
+    token(() => true, name),
+    onSuccess(() => out)
+  );
+};

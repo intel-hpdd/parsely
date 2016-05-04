@@ -1,12 +1,17 @@
 {
   "parser": "babel-eslint",
   "plugins": [
-    "flow-vars"
+    "flow-vars",
+    "flowtype"
   ],
   "rules": {
     "flow-vars/define-flow-type": 1,
     "flow-vars/use-flow-type": 1,
-    "no-constant-condition": 0,
+    "flowtype/space-after-type-colon": [
+        1,
+        "never"
+    ],
+    "no-constant-condition": 0, 
     "quotes": [
       2,
       "single"

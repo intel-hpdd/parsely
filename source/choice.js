@@ -21,11 +21,18 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry} from 'intel-fp';
+import {curry, flow, map, reduce, uniqBy, identity} from 'intel-fp';
 
 import type {lexerTokens, result, tokensToResult} from './index.js';
 
-export default curry(2, function choice (choices:Array<tokensToResult>, tokens:lexerTokens):result {
+const getExpected = flow(
+  map(x => x.result),
+  map(x => x.expected),
+  reduce([], (arr, xs) => arr.concat(xs)),
+  uniqBy(identity)
+);
+
+export default curry(2, (choices:Array<tokensToResult>, tokens:lexerTokens):result => {
   var out;
   const errors = [];
 
@@ -51,17 +58,13 @@ export default curry(2, function choice (choices:Array<tokensToResult>, tokens:l
   if (errs.length === 1)
     return err;
 
-  const suggestions = Array.from(errs.reduce((set, err) => {
-    err.suggest.forEach(x => set.add(x));
-    return set;
-  }, new Set()));
+  const expected = getExpected(errs);
 
-  if (suggestions.length === 1)
+  if (expected.length === 1)
     return err;
 
   return {
     ...err,
-    suggest: suggestions,
-    result: new Error(`Expected one of ${suggestions.join(', ')}`)
+    result: err.result.adjust(expected)
   };
 });

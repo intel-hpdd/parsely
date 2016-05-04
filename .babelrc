@@ -5,7 +5,8 @@
   "plugins": [
     "transform-flow-strip-types",
     "transform-strict-mode",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "transform-class-properties"
   ],
   "sourceMaps": "inline"
 }

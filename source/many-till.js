@@ -25,11 +25,10 @@ import {curry} from 'intel-fp';
 
 import type {lexerTokens, result, tokensToResult} from './index.js';
 
-export default curry(3, function manyTill (symbolFn:tokensToResult, endFn:tokensToResult, tokens:lexerTokens):result {
+export default curry(3, (symbolFn:tokensToResult, endFn:tokensToResult, tokens:lexerTokens):result => {
   var err;
   var out = {
     tokens,
-    suggest: [],
     consumed: 0,
     result: ''
   };
@@ -38,12 +37,15 @@ export default curry(3, function manyTill (symbolFn:tokensToResult, endFn:tokens
     var parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
-      err = {...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
+      err = {
+        ...parsed,
+        consumed: out.consumed + parsed.consumed,
+        tokens: out.tokens
+      };
       break;
     } else {
       out = {
         tokens: parsed.tokens,
-        suggest: [],
         consumed: out.consumed + parsed.consumed,
         result: out.result.concat(parsed.result)
       };

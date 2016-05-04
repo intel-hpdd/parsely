@@ -1,66 +1,67 @@
 
 import {__, always} from 'intel-fp';
 import {describe, beforeEach, it, expect, jasmine} from './jasmine';
-import token from '../source/token';
+import token from '../source/token.js';
+import parserFn from './parser-fn.js';
+import error from '../source/error.js';
 
 describe('token', () => {
-  var fn;
+  var value, parser;
 
   beforeEach(() => {
-    fn = token('foo', always('bar'));
-  });
+    value = token(always(true), 'value');
 
-  it('should be a function', () => {
-    expect(token).toEqual(jasmine.any(Function));
+    parser = parserFn(value);
   });
 
   it('should be curried', () => {
-    expect(token(__, __)).toEqual(jasmine.any(Function));
+    expect(token(__, __, __)).toEqual(jasmine.any(Function));
   });
 
   it('should return an error if there are no tokens', () => {
-    expect(fn([]).result.message).toBe('Expected foo got end of string');
+    const {parsed} = parser('');
+
+    expect(parsed)
+      .toEqual({
+        tokens: [],
+        consumed: 0,
+        result: error(null, ['value'])
+      });
   });
 
   it('should return the computed output', () => {
-    expect(fn([{
-      name: 'foo'
-    }])).toEqual({
-      tokens: [],
-      suggest: [],
-      consumed: 1,
-      result: 'bar'
-    });
+    const {parsed} = parser('foo');
+
+    expect(parsed)
+      .toEqual({
+        tokens: [],
+        consumed: 1,
+        result: 'foo'
+      });
   });
 
-  it('should not mutate tokens', () => {
-    var tokens = [
-      {
-        name: 'foo'
-      },
-      {
-        name: 'baz'
-      }
-    ];
+  it('should report errors on content mismatch', () => {
+    const {parsed, tokens} = parserFn(
+      token(x => x === 'bar', 'value'),
+      'foo'
+    );
 
-    fn(tokens);
-
-    expect(tokens).toEqual([
-      {
-        name: 'foo'
-      },
-      {
-        name: 'baz'
-      }
-    ]);
+    expect(parsed)
+      .toEqual({
+        tokens: [tokens[0]],
+        consumed: 0,
+        result: error(tokens[0], ['value'])
+      });
   });
 
-  it('should report mismatched tokens', () => {
-    expect(fn([
-      {
-        name: 'baz',
-        start: 0
-      }
-    ]).result.message).toEqual('Expected foo got baz at character 0');
+  it('should report errors', () => {
+    const {parsed, tokens} = parser('*');
+
+    expect(parsed)
+      .toEqual({
+        tokens: [tokens[0]],
+        consumed: 0,
+        result: error(tokens[0], ['value'])
+      });
   });
 });
