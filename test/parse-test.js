@@ -1,15 +1,25 @@
-import parse from '../source/parse';
+import parse from '../source/parse.js';
+import error from '../source/error.js';
+import token from '../source/token.js';
+import parserFn from './parser-fn.js';
 import {jasmine, expect, it, describe, beforeEach} from './jasmine.js';
+import {__, always, eq} from 'intel-fp';
 
-import {__, always} from 'intel-fp';
-
-describe('parser parse', () => {
-  var token;
+describe('parse', () => {
+  var parser;
 
   beforeEach(() => {
-    token = (result) => {
-      return () => ({ result, consumed: 1, tokens: [] });
-    };
+    const value = token(__, 'value');
+    parser = parserFn(
+      parse(
+        always(''),
+        [
+          value(eq('a')),
+          value(eq('b')),
+          value(eq('c'))
+        ]
+      )
+    );
   });
 
   it('should be a function', () => {
@@ -17,52 +27,28 @@ describe('parser parse', () => {
   });
 
   it('should be curried', () => {
-    expect(parse(__, __)).toEqual(jasmine.any(Function));
+    expect(parse(__, __, __)).toEqual(jasmine.any(Function));
   });
 
   it('should reduce to an output string', () => {
-    const out = parse(always(''),
-      [
-        token('a'),
-        token('b'),
-        token('c')
-      ],
-      []
-    );
+    const {parsed} = parser('a b c');
 
-    expect(out).toEqual({
-      tokens: [],
-      suggest: [],
-      consumed: 3,
-      result: 'abc'
-    });
+    expect(parsed)
+      .toEqual({
+        tokens: [],
+        consumed: 3,
+        result: 'abc'
+      });
   });
 
   it('should return the first error found', () => {
-    var out = parse(always(''), [
-      token('a'),
-      () => ({ result: new Error('boom!'), consumed: 0, tokens: [] }),
-      token('b')
-    ], []);
+    const {parsed, tokens} = parser('a e c');
 
-    expect(out).toEqual({ result: new Error('boom!'), consumed: 1, tokens: [] });
-  });
-
-  it('should parse arrays', () => {
-    var out = parse(() => [],
-      [
-        token('a'),
-        token('b'),
-        token('c')
-      ],
-      []
-    );
-
-    expect(out).toEqual({
-      tokens: [],
-      suggest: [],
-      consumed: 3,
-      result: ['a', 'b', 'c']
-    });
+    expect(parsed)
+      .toEqual({
+        tokens: tokens.slice(1),
+        consumed: 1,
+        result: error(tokens[1], ['value'])
+      });
   });
 });

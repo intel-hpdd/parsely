@@ -25,11 +25,10 @@ import type {lexerTokens, result, tokensToResult} from './index.js';
 
 import {curry} from 'intel-fp';
 
-export default curry(2, function optional (p:tokensToResult, tokens:lexerTokens):result {
+export default curry(2, (p:tokensToResult, tokens:lexerTokens):result => {
   if (!tokens.length)
     return {
       tokens,
-      suggest: [],
       consumed: 0,
       result: ''
     };

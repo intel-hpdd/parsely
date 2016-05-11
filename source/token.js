@@ -21,8 +21,33 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import tokenError from './token-error.js';
+import type {lexerTokens, result} from './index.js';
 
-import {identity, __} from 'intel-fp';
+import error from './error.js';
+import {curry} from 'intel-fp';
 
-export default tokenError(__, __, identity);
+export default curry(3,
+  function token (contentFn:Function, name:string, tokens:lexerTokens):result {
+    if (tokens.length === 0)
+      return {
+        tokens,
+        consumed: 0,
+        result: error(null, [name])
+      };
+
+    const [t, ...tokensRest] = tokens;
+
+    if (t.name === name && contentFn(t.content))
+      return {
+        tokens: tokensRest,
+        consumed: 1,
+        result: t.content
+      };
+
+    return {
+      tokens,
+      consumed: 0,
+      result: error(t, [name])
+    };
+  }
+);

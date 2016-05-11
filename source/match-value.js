@@ -21,36 +21,19 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry} from 'intel-fp';
-import type {lexerTokens, result} from './index.js';
+import type {tokensToResult} from './index.js';
+import token from './token.js';
+import {onError, onSuccess} from './error.js';
+import {flow, eq} from 'intel-fp';
 
-type stringToString = (content:string) => string;
+export const matchValue = (name:string):tokensToResult => {
+  return flow(
+    token(eq(name), 'value'),
+    onError(e => e.adjust([name]))
+  );
+};
 
-export default curry(3,
-  function match (content:string, outFn:stringToString, tokens:lexerTokens):result {
-    if (tokens.length === 0)
-      return {
-        tokens,
-        suggest: [content],
-        consumed: 0,
-        result: new Error(`Expected ${content} got end of string`)
-      };
-
-    const [t, ...tokensRest] = tokens;
-
-    if (t.name === 'value' && t.content === content)
-      return {
-        tokens: tokensRest,
-        suggest: [],
-        consumed: 1,
-        result: outFn(t.content)
-      };
-
-    return {
-      tokens,
-      suggest: [content],
-      consumed: 0,
-      result: new Error(`Expected ${content} got ${t.content} at character ${t.start}`)
-    };
-  }
+export const matchValueTo = (name:string, out:string) => flow(
+  matchValue(name),
+  onSuccess(() => out)
 );

@@ -25,11 +25,10 @@ import type {lexerTokens, tokensToResult} from './index.js';
 
 import {curry} from 'intel-fp';
 
-export default curry(3, function sepByInfinity (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens) {
+export default curry(3, (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens) => {
   var err;
   var out = {
     tokens,
-    suggest: [],
     consumed: 0,
     result: ''
   };
@@ -38,12 +37,15 @@ export default curry(3, function sepByInfinity (symbolFn:tokensToResult, sepFn:t
     const parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
-      err = { ...parsed, consumed: out.consumed + parsed.consumed, tokens: out.tokens };
+      err = {
+        ...parsed,
+        consumed: out.consumed + parsed.consumed,
+        tokens: out.tokens
+      };
       break;
     } else {
       out = {
         tokens: parsed.tokens,
-        suggest: [],
         consumed: out.consumed + parsed.consumed,
         result: out.result.concat(parsed.result)
       };
@@ -52,7 +54,10 @@ export default curry(3, function sepByInfinity (symbolFn:tokensToResult, sepFn:t
     const sepParsed = sepFn(out.tokens);
 
     if (sepParsed.result instanceof Error) {
-      err = { ...sepParsed, consumed: out.consumed + sepParsed.consumed };
+      err = {
+        ...sepParsed,
+        consumed: out.consumed + sepParsed.consumed
+      };
       break;
     } else {
       out = {

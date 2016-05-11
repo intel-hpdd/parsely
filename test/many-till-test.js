@@ -39,7 +39,6 @@ describe('many till', () => {
     it('should consume until the end fn ', () => {
       expect(res).toEqual({
         tokens: [2, 1],
-        suggest: [],
         consumed: 8,
         result: '109876543'
       });
