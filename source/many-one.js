@@ -21,17 +21,22 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry} from 'intel-fp';
+import * as fp from 'intel-fp';
 
-import type {lexerTokens, result, tokensToResult} from './index.js';
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
 
-export default curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result => {
+export default fp.curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result => {
   var err;
   var out = {
     tokens,
     consumed: 0,
     result: ''
   };
+  var atLeastOnce = false;
 
   while (true) {
     var parsed = symbolFn(out.tokens);
@@ -44,16 +49,15 @@ export default curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result => 
       };
       break;
     } else {
+      atLeastOnce = true;
       out = {
         tokens: parsed.tokens,
         consumed: out.consumed + parsed.consumed,
         result: out.result.concat(parsed.result)
       };
     }
-
-    if (!parsed.result instanceof Error)
-      break;
   }
 
-  return (out.consumed === 0 && err) ? err : out;
+  // $FlowIgnore: Error is guaranteed to be set if atLeastOnce is false
+  return !atLeastOnce ? err : out;
 });
