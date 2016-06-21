@@ -21,40 +21,43 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-export {default as choice} from './choice.js';
-export {default as endOfString} from './end-of-string.js';
-export {default as getLexer} from './get-lexer.js';
-export {default as manyTill} from './many-till.js';
-export {default as many1} from './many-1.js';
-export {default as optional} from './optional.js';
-export {default as parse} from './parse.js';
-export {default as sepBy1} from './sep-by-1.js';
-export {default as token} from './token.js';
-export {default as sepByInfinity} from './sep-by-infinity.js';
-export {matchValue, matchValueTo} from './match-value.js';
-export {default as tokenTo} from './token-to.js';
+import * as fp from 'intel-fp';
 
-import parse from './parse.js';
-export const parseStr = parse(() => '');
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
 
-import {ParseError} from './error';
-export {ParseError, onSuccess, onError, default as error} from './error';
+export default fp.curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result => {
+  var err;
+  var out = {
+    tokens,
+    consumed: 0,
+    result: ''
+  };
+  var atLeastOnce = false;
 
-export type result = {
-  tokens: lexerTokens;
-  consumed: number;
-  result: ParseError | string;
-};
+  while (true) {
+    var parsed = symbolFn(out.tokens);
 
-export type tokensToResult = (tokens:lexerTokens) => result;
+    if (parsed.result instanceof Error) {
+      err = {
+        ...parsed,
+        consumed: out.consumed + parsed.consumed,
+        tokens: out.tokens
+      };
+      break;
+    } else {
+      atLeastOnce = true;
+      out = {
+        tokens: parsed.tokens,
+        consumed: out.consumed + parsed.consumed,
+        result: out.result.concat(parsed.result)
+      };
+    }
+  }
 
-export type lexerToken = {
-  content: string;
-  name: string;
-  start: number;
-  end: number;
-  next?: lexerToken;
-  prev?: lexerToken;
-}
-
-export type lexerTokens = Array<lexerToken>;
+  // $FlowIgnore: Error is guaranteed to be set if atLeastOnce is false
+  return !atLeastOnce ? err : out;
+});
