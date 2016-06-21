@@ -1,4 +1,4 @@
-import manyOne from '../source/many-one.js';
+import many1 from '../source/many-1.js';
 import {beforeEach, it, expect, jasmine, describe} from './jasmine.js';
 import {__, curry} from 'intel-fp';
 
@@ -16,11 +16,11 @@ describe('many one', () => {
   });
 
   it('should be a function', () => {
-    expect(manyOne).toEqual(jasmine.any(Function));
+    expect(many1).toEqual(jasmine.any(Function));
   });
 
   it('should be curried', () => {
-    expect(manyOne(__, __)).toEqual(jasmine.any(Function));
+    expect(many1(__, __)).toEqual(jasmine.any(Function));
   });
 
   describe('token handling', () => {
@@ -28,7 +28,7 @@ describe('many one', () => {
 
     beforeEach(() => {
       tokens = [2, 2, 2, 10, 9, 8, 7];
-      res = manyOne(consumeToken((x) => {
+      res = many1(consumeToken((x) => {
         if (x === 2)
           return x;
         else
@@ -54,7 +54,7 @@ describe('many one', () => {
 
     beforeEach(() => {
       tokens = [3, 2, 1];
-      res = manyOne(
+      res = many1(
         tokens => {
 
           return {

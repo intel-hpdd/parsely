@@ -25,6 +25,7 @@ export {default as choice} from './choice.js';
 export {default as endOfString} from './end-of-string.js';
 export {default as getLexer} from './get-lexer.js';
 export {default as manyTill} from './many-till.js';
+export {default as many1} from './many-1.js';
 export {default as optional} from './optional.js';
 export {default as parse} from './parse.js';
 export {default as sepBy1} from './sep-by-1.js';
