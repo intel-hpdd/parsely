@@ -1,12 +1,14 @@
+// @flow
+
 import getLexer from '../source/get-lexer';
+
 import {
   describe,
   beforeEach,
   it,
   expect,
   jasmine
-}
-from './jasmine.js';
+} from './jasmine.js';
 
 describe('The lexer', () => {
   it('should be a function', () => {
@@ -20,7 +22,7 @@ describe('The lexer', () => {
   });
 
   describe('tokenizing', () => {
-    var tokenizer;
+    let tokenizer;
 
     beforeEach(() => {
       tokenizer = getLexer([
@@ -253,7 +255,7 @@ describe('The lexer', () => {
     });
 
     describe('linked list', () => {
-      var tokens;
+      let tokens;
 
       beforeEach(() => {
         tokens = tokenizer('type = alert');

@@ -1,10 +1,16 @@
 import tokenTo from '../source/token-to.js';
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';
-import {describe, beforeEach, it, expect} from './jasmine';
+
+import {
+  describe,
+  beforeEach,
+  it,
+  expect
+} from './jasmine';
 
 describe('token to', () => {
-  var parser;
+  let parser;
 
   beforeEach(() => {
     parser = parserFn(

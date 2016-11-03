@@ -21,20 +21,20 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry} from 'intel-fp';
+import * as fp from 'intel-fp';
 
 import type {lexerTokens, result, tokensToResult} from './index.js';
 
-export default curry(3, (symbolFn:tokensToResult, endFn:tokensToResult, tokens:lexerTokens):result => {
-  var err;
-  var out = {
+export default fp.curry3((symbolFn:tokensToResult, endFn:tokensToResult, tokens:lexerTokens):result => {
+  let err;
+  let out = {
     tokens,
     consumed: 0,
     result: ''
   };
 
   while (true) {
-    var parsed = symbolFn(out.tokens);
+    let parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
       err = {

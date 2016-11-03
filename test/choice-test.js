@@ -1,10 +1,19 @@
+// @flow
+
+import * as fp from 'intel-fp';
 import choice from '../source/choice.js';
 import token from '../source/token.js';
 import error from '../source/error.js';
 import parse from '../source/parse.js';
 import parserFn from './parser-fn.js';
-import {beforeEach, describe, expect, it, jasmine} from './jasmine.js';
-import {__, eq, always} from 'intel-fp';
+
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jasmine
+} from './jasmine.js';
 
 describe('parser choice', () => {
   it('should return a function', () => {
@@ -12,19 +21,14 @@ describe('parser choice', () => {
       .toEqual(jasmine.any(Function));
   });
 
-  it('should be curried', () => {
-    expect(choice(__, __))
-      .toEqual(jasmine.any(Function));
-  });
-
   describe('finding choices', () => {
-    var parser;
+    let parser;
 
     beforeEach(() => {
       parser = parserFn(choice([
-        token(eq('a'), 'value'),
-        token(eq('b'), 'value'),
-        token(always(true), 'equals')
+        token(fp.eq('a'), 'value'),
+        token(fp.eq('b'), 'value'),
+        token(fp.always(true), 'equals')
       ]));
     });
 
@@ -62,17 +66,19 @@ describe('parser choice', () => {
     });
 
     it('should return the most specific error', () => {
-      const {parsed} = parserFn(
+      const {
+        parsed
+      } = parserFn(
         choice([
           parse(
             () => '',
             [
-              token(eq('a'), 'value'),
-              token(always(true), 'equals'),
-              token(always(true), 'join')
+              token(fp.eq('a'), 'value'),
+              token(fp.always(true), 'equals'),
+              token(fp.always(true), 'join')
             ]
           ),
-          token(eq('b'), 'value')
+          token(fp.eq('b'), 'value')
         ]),
         'a ='
       );

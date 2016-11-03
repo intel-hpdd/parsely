@@ -1,33 +1,43 @@
-import {flow, curry} from 'intel-fp';
+// @flow
+
+import * as fp from 'intel-fp';
 import getLexer from '../source/get-lexer';
 
-export default curry(2, (p, t) => {
-  var tokens;
-  const parser = flow(
-    getLexer([
-      {
-        name: 'whiteSpace',
-        pattern: /^[ \t\n]+/,
-        ignore: true
-      },
-      {
-        name: 'join',
-        pattern: /^and/
-      },
-      {
-        name: 'value',
-        pattern: /^[a-zA-z]+/
-      },
-      {
-        name: 'equals',
-        pattern: /^=/
-      }
-    ]),
-    x => tokens = x,
-    p
-  );
+import type {
+  lexerTokens,
+  result
+} from '../source/index.js';
 
-  const parsed = parser(t);
+import type {
+  lexerType
+} from '../source/get-lexer.js';
 
-  return {tokens, parsed};
+export default fp.curry2((p:(t:lexerTokens) => result, t:string) => {
+  const lexer = getLexer([
+    {
+      name: 'whiteSpace',
+      pattern: /^[ \t\n]+/,
+      ignore: true
+    },
+    {
+      name: 'join',
+      pattern: /^and/
+    },
+    {
+      name: 'value',
+      pattern: /^[a-zA-z]+/
+    },
+    {
+      name: 'equals',
+      pattern: /^=/
+    }
+  ]);
+
+  const tokens = lexer(t);
+  const parsed = p(tokens);
+
+  return {
+    tokens,
+    parsed
+  };
 });

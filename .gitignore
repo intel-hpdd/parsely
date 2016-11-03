@@ -1,7 +1,7 @@
-node_modules
 *.iml
+/.idea
+/coverage
+/dist
+/node_modules
+/.nyc_output
 *.log
-.idea
-dist
-coverage
-.nyc_output

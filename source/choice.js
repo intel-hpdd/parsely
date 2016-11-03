@@ -21,19 +21,23 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import {curry, flow, map, reduce, uniqBy, identity} from 'intel-fp';
+import * as fp from 'intel-fp';
 
-import type {lexerTokens, result, tokensToResult} from './index.js';
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
 
-const getExpected = flow(
-  map(x => x.result),
-  map(x => x.expected),
-  reduce([], (arr, xs) => arr.concat(xs)),
-  uniqBy(identity)
+const getExpected = fp.flow(
+  fp.map(x => x.result),
+  fp.map(x => x.expected),
+  fp.reduce([], (arr, xs) => arr.concat(xs)),
+  fp.uniqBy(fp.identity)
 );
 
-export default curry(2, (choices:Array<tokensToResult>, tokens:lexerTokens):result => {
-  var out;
+export default fp.curry2((choices:tokensToResult[], tokens:lexerTokens):result => {
+  let out;
   const errors = [];
 
   choices.some(fn => {

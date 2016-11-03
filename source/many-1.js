@@ -29,17 +29,17 @@ import type {
   tokensToResult
 } from './index.js';
 
-export default fp.curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result => {
-  var err;
-  var out = {
+export default fp.curry2((symbolFn:tokensToResult, tokens:lexerTokens):result => {
+  let err;
+  let out = {
     tokens,
     consumed: 0,
     result: ''
   };
-  var atLeastOnce = false;
+  let atLeastOnce = false;
 
   while (true) {
-    var parsed = symbolFn(out.tokens);
+    const parsed = symbolFn(out.tokens);
 
     if (parsed.result instanceof Error) {
       err = {
@@ -58,6 +58,6 @@ export default fp.curry(2, (symbolFn:tokensToResult, tokens:lexerTokens):result 
     }
   }
 
-  // $FlowIgnore: Error is guaranteed to be set if atLeastOnce is false
+  // $FlowFixMe: Error is guaranteed to be set if atLeastOnce is false
   return !atLeastOnce ? err : out;
 });

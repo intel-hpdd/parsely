@@ -21,10 +21,15 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {lexerTokens, result} from './index.js';
-import {curry} from 'intel-fp';
+import * as fp from 'intel-fp';
 
-export default curry(3, (initFn:() => string, fns:Array<Function>, tokens:lexerTokens):result => {
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
+
+export default fp.curry3((initFn:() => string, fns:tokensToResult[], tokens:lexerTokens):result => {
   const out = {
     tokens,
     consumed: 0,
@@ -42,11 +47,12 @@ export default curry(3, (initFn:() => string, fns:Array<Function>, tokens:lexerT
         ...result,
         consumed: curr.consumed + result.consumed
       };
-
-    return {
-      ...result,
-      consumed: curr.consumed + result.consumed,
-      result: curr.result.concat(result.result)
-    };
+    else
+      return {
+        ...result,
+        consumed: curr.consumed + result.consumed,
+        // $FlowFixMe This has been checked to be string above
+        result: curr.result.concat(result.result)
+      };
   }, out);
 });

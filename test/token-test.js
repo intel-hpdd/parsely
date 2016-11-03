@@ -1,21 +1,26 @@
+// @flow
 
-import {__, always} from 'intel-fp';
-import {describe, beforeEach, it, expect, jasmine} from './jasmine';
+import * as fp from 'intel-fp';
 import token from '../source/token.js';
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';
 
+import {
+  describe,
+  beforeEach,
+  it,
+  expect,
+  jasmine
+} from './jasmine';
+
 describe('token', () => {
-  var value, parser;
+  let value,
+    parser;
 
   beforeEach(() => {
-    value = token(always(true), 'value');
+    value = token(fp.always(true), 'value');
 
     parser = parserFn(value);
-  });
-
-  it('should be curried', () => {
-    expect(token(__, __, __)).toEqual(jasmine.any(Function));
   });
 
   it('should return an error if there are no tokens', () => {

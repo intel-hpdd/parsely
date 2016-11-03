@@ -1,10 +1,19 @@
-import {matchValue} from '../source/match-value.js';
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';
-import {describe, beforeEach, it, expect} from './jasmine';
+
+import {
+  matchValue
+} from '../source/match-value.js';
+
+import {
+  describe,
+  beforeEach,
+  it,
+  expect
+} from './jasmine';
 
 describe('match value', () => {
-  var parser;
+  let parser;
 
   beforeEach(() => {
     parser = parserFn(
