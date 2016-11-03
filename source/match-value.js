@@ -21,19 +21,26 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokensToResult} from './index.js';
+import * as fp from 'intel-fp';
 import token from './token.js';
-import {onError, onSuccess} from './error.js';
-import {flow, eq} from 'intel-fp';
 
-export const matchValue = (name:string):tokensToResult => {
-  return flow(
-    token(eq(name), 'value'),
+import {
+  onError,
+  onSuccess
+} from './error.js';
+
+import type {
+  tokensToResult
+} from './index.js';
+
+export const matchValue = (name:string):tokensToResult =>
+  fp.flow(
+    token(fp.eq(name), 'value'),
     onError(e => e.adjust([name]))
   );
-};
 
-export const matchValueTo = (name:string, out:string) => flow(
-  matchValue(name),
-  onSuccess(() => out)
-);
+export const matchValueTo = (name:string, out:string) =>
+  fp.flow(
+    matchValue(name),
+    onSuccess(fp.always(out))
+  );

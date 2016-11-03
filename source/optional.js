@@ -21,11 +21,15 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {lexerTokens, result, tokensToResult} from './index.js';
+import * as fp from 'intel-fp';
 
-import {curry} from 'intel-fp';
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
 
-export default curry(2, (p:tokensToResult, tokens:lexerTokens):result => {
+export default fp.curry2((p:tokensToResult, tokens:lexerTokens):result => {
   if (!tokens.length)
     return {
       tokens,

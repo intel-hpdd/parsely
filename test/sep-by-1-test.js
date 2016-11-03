@@ -1,24 +1,21 @@
+// @flow
+
+import * as fp from 'intel-fp';
 import sepBy1 from '../source/sep-by-1.js';
-import {
-  __,
-  curry,
-  always
-}
-from 'intel-fp';
+
 import {
   describe,
   beforeEach,
   it,
   expect,
   jasmine
-}
-from './jasmine.js';
+} from './jasmine.js';
 
 describe('parser sepBy1', () => {
-  var ifToken;
+  let ifToken;
 
   beforeEach(() => {
-    ifToken = curry(2, (elseFn, tokens) => {
+    ifToken = fp.curry2((elseFn, tokens) => {
       if (!tokens.length)
         return {
           tokens,
@@ -36,16 +33,11 @@ describe('parser sepBy1', () => {
     });
   });
 
-  it('should be curried', () => {
-    expect(sepBy1(__, __))
-      .toEqual(jasmine.any(Function));
-  });
-
   it('should match a symbol', () => {
     expect(
       sepBy1(
-        ifToken(always('bar')),
-        ifToken(always(',')),
+        ifToken(fp.always('bar')),
+        ifToken(fp.always(',')),
         [
           {}
         ]
@@ -61,8 +53,8 @@ describe('parser sepBy1', () => {
   it('should match a symbol, sep, symbol', () => {
     expect(
       sepBy1(
-        ifToken(always('bar')),
-        ifToken(always(',')),
+        ifToken(fp.always('bar')),
+        ifToken(fp.always(',')),
         [
           {},
           {},
@@ -80,8 +72,8 @@ describe('parser sepBy1', () => {
   it('should error on symbol, sep', () => {
     expect(
       sepBy1(
-        ifToken(always('bar')),
-        ifToken(always(',')),
+        ifToken(fp.always('bar')),
+        ifToken(fp.always(',')),
         [
           {},
           {}
@@ -98,8 +90,8 @@ describe('parser sepBy1', () => {
   it('should error if nothing is consumed', () => {
     expect(
       sepBy1(
-        ifToken(always('bar')),
-        ifToken(always(',')),
+        ifToken(fp.always('bar')),
+        ifToken(fp.always(',')),
         []
       )
     )
@@ -111,7 +103,7 @@ describe('parser sepBy1', () => {
   });
 
   it('should return any seps that were not consumed', () => {
-    var calls = 0;
+    let calls = 0;
 
     expect(
       sepBy1(
@@ -131,7 +123,7 @@ describe('parser sepBy1', () => {
             result: 'bar'
           };
         },
-        ifToken(always(',')),
+        ifToken(fp.always(',')),
         [
           {},
           {},

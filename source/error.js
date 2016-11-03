@@ -21,8 +21,12 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {lexerToken, result} from './index.js';
-import {curry} from 'intel-fp';
+import * as fp from 'intel-fp';
+
+import type {
+  lexerToken,
+  result
+} from './index.js';
 
 const defaultT = {
   start:Infinity,
@@ -31,8 +35,8 @@ const defaultT = {
   content: ''
 };
 
-function getMessage (t:lexerToken, expected:Array<string>):string {
-  var str = 'Expected';
+function getMessage (t:lexerToken, expected:string[]):string {
+  let str = 'Expected';
 
   str += expected.length > 1 ?
     ` one of ${expected.join(', ')}` :
@@ -62,9 +66,9 @@ export class ParseError extends Error {
   }
 }
 
-export default (t:?lexerToken, expected:Array<string>):ParseError => new ParseError(t, expected);
+export default (t:?lexerToken, expected:string[]):ParseError => new ParseError(t, expected);
 
-export const onSuccess = curry(2, (fn:(s:string) => string, result:result):result => {
+export const onSuccess = fp.curry2((fn:(s:string) => (string | ParseError), result:result):result => {
   if (!(result.result instanceof Error))
     return {
       ...result,
@@ -74,7 +78,7 @@ export const onSuccess = curry(2, (fn:(s:string) => string, result:result):resul
     return result;
 });
 
-export const onError = curry(2, (fn:(e:ParseError) => ParseError, result:result):result => {
+export const onError = fp.curry2((fn:(e:ParseError) => (ParseError | string), result:result):result => {
   if (result.result instanceof Error)
     return {
       ...result,
