@@ -1,9 +1,17 @@
+// @flow
+
 import optional from '../source/optional';
-import {__} from 'intel-fp';
-import {jasmine, describe, beforeEach, it, expect} from './jasmine.js';
+
+import {
+  jasmine,
+  describe,
+  beforeEach,
+  it,
+  expect
+} from './jasmine.js';
 
 describe('parser optional', () => {
-  var spy;
+  let spy;
 
   beforeEach(() => {
     spy = jasmine.createSpy('spy');
@@ -11,11 +19,6 @@ describe('parser optional', () => {
 
   it('should be a function', () => {
     expect(optional)
-      .toEqual(jasmine.any(Function));
-  });
-
-  it('should be curried', () => {
-    expect(optional(__, __))
       .toEqual(jasmine.any(Function));
   });
 

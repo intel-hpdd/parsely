@@ -34,27 +34,31 @@ export {default as sepByInfinity} from './sep-by-infinity.js';
 export {matchValue, matchValueTo} from './match-value.js';
 export {default as tokenTo} from './token-to.js';
 
+import type {
+  Curry2
+} from 'intel-fp';
+
 import parse from './parse.js';
-export const parseStr = parse(() => '');
+export const parseStr:Curry2<tokensToResult[], lexerTokens, result> = parse(() => '');
 
 import {ParseError} from './error';
 export {ParseError, onSuccess, onError, default as error} from './error';
 
 export type result = {
-  tokens: lexerTokens;
-  consumed: number;
-  result: ParseError | string;
+  tokens:lexerTokens;
+  consumed:number;
+  result:ParseError | string;
 };
 
 export type tokensToResult = (tokens:lexerTokens) => result;
 
 export type lexerToken = {
-  content: string;
-  name: string;
-  start: number;
-  end: number;
-  next?: lexerToken;
-  prev?: lexerToken;
+  content:string;
+  name:string;
+  start:number;
+  end:number;
+  next?:lexerToken;
+  prev?:lexerToken;
 }
 
 export type lexerTokens = Array<lexerToken>;

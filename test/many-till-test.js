@@ -1,12 +1,21 @@
+// @flow
+
+import * as fp from 'intel-fp';
 import manyTill from '../source/many-till.js';
-import {beforeEach, it, expect, jasmine, describe} from './jasmine.js';
-import {__, curry, identity, always} from 'intel-fp';
+
+import {
+  beforeEach,
+  it,
+  expect,
+  jasmine,
+  describe
+} from './jasmine.js';
 
 describe('many till', () => {
-  var consumeToken;
+  let consumeToken;
 
   beforeEach(() => {
-    consumeToken = curry(2, (fn, tokens) => {
+    consumeToken = fp.curry2((fn, tokens) => {
       return {
         tokens: tokens.slice(1),
         consumed: 1,
@@ -19,16 +28,12 @@ describe('many till', () => {
     expect(manyTill).toEqual(jasmine.any(Function));
   });
 
-  it('should be curried', () => {
-    expect(manyTill(__, __)).toEqual(jasmine.any(Function));
-  });
-
   describe('token handling', () => {
-    var tokens, res;
+    let tokens, res;
 
     beforeEach(() => {
       tokens = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-      res = manyTill(consumeToken(identity), consumeToken((x) => {
+      res = manyTill(consumeToken(fp.identity), consumeToken((x) => {
         if (x === 2)
           return x;
         else
@@ -50,7 +55,7 @@ describe('many till', () => {
   });
 
   describe('error handling', () => {
-    var tokens, res;
+    let tokens, res;
 
     beforeEach(() => {
       tokens = [3, 2, 1];
@@ -71,7 +76,7 @@ describe('many till', () => {
               result: new Error('x is not 3')
             };
         },
-        always({
+        fp.always({
           result: new Error('boom!')
         }),
         tokens

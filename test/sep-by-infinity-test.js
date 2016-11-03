@@ -1,12 +1,16 @@
+// @flow
+
+import * as fp from 'intel-fp';
 import sepByInfinity from '../source/sep-by-infinity.js';
-import {__, noop} from 'intel-fp';
-import {jasmine, expect, it, describe} from './jasmine.js';
+
+import {
+  jasmine,
+  expect,
+  it,
+  describe
+} from './jasmine.js';
 
 describe('sep by infinity', () => {
-  it('should be curried', () => {
-    expect(sepByInfinity(__, __, __)).toEqual(jasmine.any(Function));
-  });
-
   it('should error if symbolFn does not parse', () => {
     const result = sepByInfinity(
       tokens => ({
@@ -14,7 +18,7 @@ describe('sep by infinity', () => {
         consumed: 0,
         result: new Error('symbolFn did not parse')
       }),
-      noop,
+      fp.noop,
       [
         {},
         {}
@@ -60,7 +64,7 @@ describe('sep by infinity', () => {
   });
 
   it('should match multiples and still error', () => {
-    var cnt = 1;
+    let cnt = 1;
 
     const result = sepByInfinity(
       tokens => ({

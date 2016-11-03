@@ -22,12 +22,15 @@
 // express and approved by Intel in writing.
 
 
-import type {lexerTokens} from './index.js';
+import type {
+  lexerTokens,
+  lexerToken
+} from './index.js';
 
-type lexerType = {
-  name: string;
-  pattern: RegExp;
-  ignore?: boolean;
+export type lexerType = {
+  name:string;
+  pattern:RegExp;
+  ignore?:boolean;
 };
 
 getLexer.whiteSpace = {
@@ -38,18 +41,18 @@ getLexer.whiteSpace = {
 
 export default getLexer;
 
-function getLexer (types:Array<lexerType>):Function {
-  return function tokenize (str:string):lexerTokens {
+function getLexer (types:lexerType[]) {
+  return function tokenize (str:?string):lexerTokens {
     str = str || '';
 
-    var matches = (function buildTokens (str, ptr) {
-      var arr = [];
+    const matches = (function buildTokens (str:string, ptr:number) {
+      const arr = [];
 
-      var foundMatch = types.some(function findMatch (type) {
-        var match = str.match(type.pattern);
+      const foundMatch = types.some(function findMatch (type) {
+        const match = str.match(type.pattern);
 
         if (match) {
-          var content = match[0];
+          const content = match[0];
 
           if (!type.ignore)
             arr.push({
@@ -59,7 +62,7 @@ function getLexer (types:Array<lexerType>):Function {
               end: ptr + content.length
             });
 
-          var len = content.length;
+          const len = content.length;
 
           ptr += len;
           str = str.substring(len);
@@ -69,8 +72,8 @@ function getLexer (types:Array<lexerType>):Function {
       });
 
       if (!foundMatch && str.length) {
-        var errContent = consumeError(str);
-        var len = errContent.length;
+        const errContent = consumeError(str);
+        const len = errContent.length;
 
         arr.push({
           content: errContent,
@@ -86,7 +89,7 @@ function getLexer (types:Array<lexerType>):Function {
       return str.length ? arr.concat(buildTokens(str, ptr)) : arr;
     }(str, 0));
 
-    matches.forEach(function doubleLinkedList (token, index) {
+    matches.forEach(function doubleLinkedList (token:lexerToken, index:number) {
       if (index > 0)
         token.prev = matches[index - 1];
 
@@ -98,7 +101,7 @@ function getLexer (types:Array<lexerType>):Function {
   };
 
   function consumeError (str) {
-    var foundMatch = types.some(function findMatch (type) {
+    const foundMatch = types.some(function findMatch (type) {
       return str.match(type.pattern);
     });
 

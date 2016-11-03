@@ -1,12 +1,21 @@
+// @flow
+
+import * as fp from 'intel-fp';
 import many1 from '../source/many-1.js';
-import {beforeEach, it, expect, jasmine, describe} from './jasmine.js';
-import {__, curry} from 'intel-fp';
+
+import {
+  beforeEach,
+  it,
+  expect,
+  jasmine,
+  describe
+} from './jasmine.js';
 
 describe('many one', () => {
-  var consumeToken;
+  let consumeToken;
 
   beforeEach(() => {
-    consumeToken = curry(2, (fn, tokens) => {
+    consumeToken = fp.curry2((fn, tokens) => {
       return {
         tokens: tokens.slice(1),
         consumed: 1,
@@ -19,12 +28,8 @@ describe('many one', () => {
     expect(many1).toEqual(jasmine.any(Function));
   });
 
-  it('should be curried', () => {
-    expect(many1(__, __)).toEqual(jasmine.any(Function));
-  });
-
   describe('token handling', () => {
-    var tokens, res;
+    let tokens, res;
 
     beforeEach(() => {
       tokens = [2, 2, 2, 10, 9, 8, 7];
@@ -50,7 +55,7 @@ describe('many one', () => {
   });
 
   describe('error handling', () => {
-    var tokens, res;
+    let tokens, res;
 
     beforeEach(() => {
       tokens = [3, 2, 1];

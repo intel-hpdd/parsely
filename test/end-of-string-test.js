@@ -1,11 +1,20 @@
-import {describe, expect, it, jasmine, beforeEach} from './jasmine.js';
+// @flow
+
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';
 import endOfString from '../source/end-of-string.js';
 
+import {
+  describe,
+  expect,
+  it,
+  jasmine,
+  beforeEach
+} from './jasmine.js';
+
 
 describe('parser end of string', () => {
-  var parser;
+  let parser;
 
   beforeEach(() => {
     parser = parserFn(endOfString);
@@ -27,7 +36,10 @@ describe('parser end of string', () => {
   });
 
   it('should return an error if there are tokens left', () => {
-    const {parsed, tokens} = parser('foo');
+    const {
+      parsed,
+      tokens
+    } = parser('foo');
 
     expect(parsed)
       .toEqual({

@@ -21,13 +21,17 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {lexerTokens, result, tokensToResult} from './index.js';
+import * as fp from 'intel-fp';
 
-import {curry} from 'intel-fp';
+import type {
+  lexerTokens,
+  result,
+  tokensToResult
+} from './index.js';
 
-export default curry(3, function sepBy1 (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens):result {
-  var err;
-  var out = {
+export default fp.curry3(function sepBy1 (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens):result {
+  let err;
+  let out = {
     tokens,
     consumed: 0,
     result: ''

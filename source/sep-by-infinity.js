@@ -21,13 +21,17 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {lexerTokens, tokensToResult} from './index.js';
+import * as fp from 'intel-fp';
 
-import {curry} from 'intel-fp';
+import type {
+  lexerTokens,
+  tokensToResult,
+  result
+} from './index.js';
 
-export default curry(3, (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens) => {
-  var err;
-  var out = {
+export default fp.curry3((symbolFn:tokensToResult, sepFn:tokensToResult, tokens:lexerTokens):result => {
+  let err;
+  let out = {
     tokens,
     consumed: 0,
     result: ''
@@ -68,5 +72,6 @@ export default curry(3, (symbolFn:tokensToResult, sepFn:tokensToResult, tokens:l
     }
   }
 
+  // $FlowFixMe The only way the loop breaks is with a populated err.
   return err;
 });

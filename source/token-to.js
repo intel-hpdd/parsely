@@ -21,14 +21,19 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {tokensToResult} from './index.js';
+import * as fp from 'intel-fp';
+
 import token from './token.js';
 import {onSuccess} from './error.js';
 import {flow} from 'intel-fp';
 
+import type {
+  tokensToResult
+} from './index.js';
+
 export default (name:string, out:string):tokensToResult => {
-  return flow(
-    token(() => true, name),
-    onSuccess(() => out)
+  return fp.flow(
+    token(fp.always(true), name),
+    onSuccess(fp.always(out))
   );
 };

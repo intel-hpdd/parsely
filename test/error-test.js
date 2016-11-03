@@ -1,9 +1,23 @@
-import {onError, onSuccess, default as error} from '../source/error.js';
-import {describe, beforeEach, expect, it, jasmine} from './jasmine.js';
-import {__} from 'intel-fp';
+// @flow
+
+import {
+  onError,
+  onSuccess,
+  default as error
+} from '../source/error.js';
+
+import {
+  describe,
+  beforeEach,
+  expect,
+  it,
+  jasmine
+} from './jasmine.js';
 
 describe('error module', () => {
-  var t, message, e;
+  let t,
+    message,
+    e;
 
   beforeEach(() => {
     t = {
@@ -60,23 +74,20 @@ describe('error module', () => {
         .toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(onSuccess(__, __))
-        .toEqual(jasmine.any(Function));
-    });
-
     it('should change the result', () => {
       expect(
         onSuccess(
           () => 'hi!',
           {
             tokens: [],
+            consumed: 5,
             result: 'hello'
           }
         )
       )
         .toEqual({
           tokens: [],
+          consumed: 5,
           result: 'hi!'
         });
     });
@@ -87,12 +98,14 @@ describe('error module', () => {
           () => 'hi!',
           {
             tokens: [],
+            consumed: 0,
             result: e
           }
         )
       )
         .toEqual({
           tokens: [],
+          consumed: 0,
           result: e
         });
     });
@@ -104,23 +117,20 @@ describe('error module', () => {
         .toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(onError(__, __))
-        .toEqual(jasmine.any(Function));
-    });
-
     it('should change the result', () => {
       expect(
         onError(
           e => e.adjust(['baz']),
           {
             tokens: [],
+            consumed: 0,
             result: e
           }
         )
       )
         .toEqual({
           tokens: [],
+          consumed: 0,
           result: error(t, ['baz'])
         });
     });
@@ -131,12 +141,14 @@ describe('error module', () => {
           e => e.adjust(['baz']),
           {
             tokens: [],
+            consumed: 5,
             result: 'hello'
           }
         )
       )
         .toEqual({
           tokens: [],
+          consumed: 5,
           result: 'hello'
         });
     });

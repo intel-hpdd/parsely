@@ -22,7 +22,11 @@
 // express and approved by Intel in writing.
 
 import error from './error.js';
-import type {lexerTokens, result} from './index.js';
+
+import type {
+  lexerTokens,
+  result
+} from './index.js';
 
 export default function endOfString (tokens:lexerTokens):result {
   return {
