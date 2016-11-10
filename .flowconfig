@@ -1,6 +1,7 @@
 [ignore]
 .*/parsely/dist.*
 .*\(lib\|test\|builtin-modules\|binary-extensions\|faker\|spdx\).*\.json
+.*node_modules/flow-coverage-report.*
 
 [include]
 
