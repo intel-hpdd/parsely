@@ -31,6 +31,7 @@ export {default as parse} from './parse.js';
 export {default as sepBy1} from './sep-by-1.js';
 export {default as token} from './token.js';
 export {default as sepByInfinity} from './sep-by-infinity.js';
+export {default as notFollowedBy} from './not-followed-by.js';
 export {matchValue, matchValueTo} from './match-value.js';
 export {default as tokenTo} from './token-to.js';
 

@@ -4,13 +4,15 @@
   "description": "Boilerplate for node projects",
   "main": "dist/source/index.js",
   "scripts": {
-    "test:dev": "npm run postversion && npm t",
-    "test": "NODE_ENV=test ./bin/test.js",
+    "pretest": "npm run postversion",
+    "test": "npm run test:nobuild",
+    "test:nobuild": "NODE_ENV=test ./bin/test.js",
     "eslint": "eslint ./",
     "flow": "flow",
+    "flow:cover": "flow-coverage-report -i 'source/**/*.js'",
     "postversion": "./bin/build.sh",
     "cover:dev": "npm run cover -- --reporter=html --reporter=lcov",
-    "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm t"
+    "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm run test:nobuild"
   },
   "nyc": {
     "sourceMap": false,
@@ -22,7 +24,8 @@
   "pre-commit": [
     "eslint",
     "flow",
-    "test:dev"
+    "flow:cover",
+    "test"
   ],
   "repository": {
     "type": "git",
@@ -42,8 +45,9 @@
     "babel-preset-es2015": "6.18.0",
     "eslint": "3.9.1",
     "eslint-plugin-flowtype": "2.25.0",
-    "eslint-plugin-import": "2.0.1",
+    "eslint-plugin-import": "2.2.0",
     "flow-bin": "0.34.0",
+    "flow-coverage-report": "0.2.0",
     "intel-deep-freeze": "1.0.1",
     "intel-flow-jasmine": "1.5.0",
     "intel-jasmine-junit-reporter": "1.0.0",
