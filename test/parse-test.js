@@ -14,7 +14,7 @@ describe('parse', () => {
     const value = x => token(x, 'value');
     parser = parserFn(
       parse(
-        fp.always(''),
+        () => '',
         [
           value(fp.eq('a')),
           value(fp.eq('b')),
