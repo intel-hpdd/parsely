@@ -35,12 +35,8 @@ export {default as notFollowedBy} from './not-followed-by.js';
 export {matchValue, matchValueTo} from './match-value.js';
 export {default as tokenTo} from './token-to.js';
 
-import type {
-  Curry2
-} from 'intel-fp';
-
 import parse from './parse.js';
-export const parseStr:Curry2<tokensToResult[], lexerTokens, result> = parse(() => '');
+export const parseStr = parse(():string => '');
 
 import {ParseError} from './error';
 export {ParseError, onSuccess, onError, default as error} from './error';
