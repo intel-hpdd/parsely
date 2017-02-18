@@ -4,14 +4,7 @@ import parserFn from './parser-fn.js';
 import error from '../source/error.js';
 import endOfString from '../source/end-of-string.js';
 
-import {
-  describe,
-  expect,
-  it,
-  jasmine,
-  beforeEach
-} from './jasmine.js';
-
+import { describe, expect, it, jasmine, beforeEach } from './jasmine.js';
 
 describe('parser end of string', () => {
   let parser;
@@ -25,14 +18,13 @@ describe('parser end of string', () => {
   });
 
   it('should return an empty string if there are no tokens', () => {
-    const {parsed} = parser('');
+    const { parsed } = parser('');
 
-    expect(parsed)
-      .toEqual({
-        tokens: [],
-        consumed: 0,
-        result: ''
-      });
+    expect(parsed).toEqual({
+      tokens: [],
+      consumed: 0,
+      result: ''
+    });
   });
 
   it('should return an error if there are tokens left', () => {
@@ -41,11 +33,10 @@ describe('parser end of string', () => {
       tokens
     } = parser('foo');
 
-    expect(parsed)
-      .toEqual({
-        tokens: [tokens[0]],
-        consumed: 0,
-        result: error(tokens[0], ['end of string'])
-      });
+    expect(parsed).toEqual({
+      tokens: [tokens[0]],
+      consumed: 0,
+      result: error(tokens[0], ['end of string'])
+    });
   });
 });

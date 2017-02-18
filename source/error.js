@@ -21,40 +21,37 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 
-import type {
-  lexerToken,
-  result
-} from './index.js';
+import type { lexerToken, result } from './index.js';
 
 const defaultT = {
-  start:Infinity,
-  end:Infinity,
+  start: Infinity,
+  end: Infinity,
   name: '',
   content: ''
 };
 
-function getMessage (t:lexerToken, expected:string[]):string {
+function getMessage(t: lexerToken, expected: string[]): string {
   let str = 'Expected';
 
-  str += expected.length > 1 ?
-    ` one of ${expected.join(', ')}` :
-    ` ${expected[0]}`;
+  str += expected.length > 1
+    ? ` one of ${expected.join(', ')}`
+    : ` ${expected[0]}`;
 
-  str += isFinite(t.start) ?
-    ` got ${t.content} at character ${t.start}` :
-    ' got end of string';
+  str += isFinite(t.start)
+    ? ` got ${t.content} at character ${t.start}`
+    : ' got end of string';
 
   return str;
 }
 
 export class ParseError extends Error {
-  expected:Array<string>;
-  start:number;
-  end:number;
-  adjust:(x:Array<string>) => ParseError;
-  constructor (t:?lexerToken, expected:Array<string>) {
+  expected: Array<string>;
+  start: number;
+  end: number;
+  adjust: (x: Array<string>) => ParseError;
+  constructor(t: ?lexerToken, expected: Array<string>) {
     t = t || defaultT;
 
     super(getMessage(t, expected));
@@ -66,9 +63,13 @@ export class ParseError extends Error {
   }
 }
 
-export default (t:?lexerToken, expected:string[]):ParseError => new ParseError(t, expected);
+export default (t: ?lexerToken, expected: string[]): ParseError =>
+  new ParseError(t, expected);
 
-export const onSuccess = fp.curry2((fn:(s:string) => (string | ParseError), result:result):result => {
+export const onSuccess = fp.curry2((
+  fn: (s: string) => string | ParseError,
+  result: result
+): result => {
   if (!(result.result instanceof Error))
     return {
       ...result,
@@ -78,7 +79,10 @@ export const onSuccess = fp.curry2((fn:(s:string) => (string | ParseError), resu
     return result;
 });
 
-export const onError = fp.curry2((fn:(e:ParseError) => (ParseError | string), result:result):result => {
+export const onError = fp.curry2((
+  fn: (e: ParseError) => ParseError | string,
+  result: result
+): result => {
   if (result.result instanceof Error)
     return {
       ...result,

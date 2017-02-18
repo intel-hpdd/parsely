@@ -1,14 +1,9 @@
 // @flow
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 import sepByInfinity from '../source/sep-by-infinity.js';
 
-import {
-  jasmine,
-  expect,
-  it,
-  describe
-} from './jasmine.js';
+import { expect, it, describe } from './jasmine.js';
 
 describe('sep by infinity', () => {
   it('should error if symbolFn does not parse', () => {
@@ -19,17 +14,11 @@ describe('sep by infinity', () => {
         result: new Error('symbolFn did not parse')
       }),
       fp.noop,
-      [
-        {},
-        {}
-      ]
+      [{}, {}]
     );
 
     expect(result).toEqual({
-      tokens: [
-        {},
-        {}
-      ],
+      tokens: [{}, {}],
       consumed: 0,
       result: new Error('symbolFn did not parse')
     });
@@ -47,17 +36,11 @@ describe('sep by infinity', () => {
         consumed: 0,
         result: new Error('sepFn did not parse')
       }),
-      [
-        {},
-        {}
-      ]
+      [{}, {}]
     );
 
     expect(result).toEqual({
-      tokens: [
-        {},
-        {}
-      ],
+      tokens: [{}, {}],
       consumed: 0,
       result: new Error('sepFn did not parse')
     });
@@ -77,17 +60,11 @@ describe('sep by infinity', () => {
         consumed: 1,
         result: ','
       }),
-      [
-        {},
-        {},
-        {}
-      ]
+      [{}, {}, {}]
     );
 
     expect(result).toEqual({
-      tokens: [
-        {}
-      ],
+      tokens: [{}],
       consumed: 3,
       result: new Error('symbolFn did not parse')
     });
