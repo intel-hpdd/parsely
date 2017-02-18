@@ -21,16 +21,12 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-
-import type {
-  lexerTokens,
-  lexerToken
-} from './index.js';
+import type { lexerTokens, lexerToken } from './index.js';
 
 export type lexerType = {
-  name:string;
-  pattern:RegExp;
-  ignore?:boolean;
+  name: string,
+  pattern: RegExp,
+  ignore?: boolean
 };
 
 getLexer.whiteSpace = {
@@ -41,14 +37,14 @@ getLexer.whiteSpace = {
 
 export default getLexer;
 
-function getLexer (types:lexerType[]) {
-  return function tokenize (str:?string):lexerTokens {
+function getLexer(types: lexerType[]) {
+  return function tokenize(str: ?string): lexerTokens {
     str = str || '';
 
-    const matches = (function buildTokens (str:string, ptr:number) {
+    const matches = (function buildTokens(str: string, ptr: number) {
       const arr = [];
 
-      const foundMatch = types.some(function findMatch (type) {
+      const foundMatch = types.some(function findMatch(type) {
         const match = str.match(type.pattern);
 
         if (match) {
@@ -87,21 +83,22 @@ function getLexer (types:lexerType[]) {
       }
 
       return str.length ? arr.concat(buildTokens(str, ptr)) : arr;
-    }(str, 0));
+    })(str, 0);
 
-    matches.forEach(function doubleLinkedList (token:lexerToken, index:number) {
-      if (index > 0)
-        token.prev = matches[index - 1];
+    matches.forEach(function doubleLinkedList(
+      token: lexerToken,
+      index: number
+    ) {
+      if (index > 0) token.prev = matches[index - 1];
 
-      if (index < matches.length - 1)
-        token.next = matches[index + 1];
+      if (index < matches.length - 1) token.next = matches[index + 1];
     });
 
     return matches;
   };
 
-  function consumeError (str) {
-    const foundMatch = types.some(function findMatch (type) {
+  function consumeError(str) {
+    const foundMatch = types.some(function findMatch(type) {
       return str.match(type.pattern);
     });
 

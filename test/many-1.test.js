@@ -1,15 +1,9 @@
 // @flow
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 import many1 from '../source/many-1.js';
 
-import {
-  beforeEach,
-  it,
-  expect,
-  jasmine,
-  describe
-} from './jasmine.js';
+import { beforeEach, it, expect, jasmine, describe } from './jasmine.js';
 
 describe('many one', () => {
   let consumeToken;
@@ -33,12 +27,13 @@ describe('many one', () => {
 
     beforeEach(() => {
       tokens = [2, 2, 2, 10, 9, 8, 7];
-      res = many1(consumeToken((x) => {
-        if (x === 2)
-          return x;
-        else
-          return new Error('x is not 2');
-      }), tokens);
+      res = many1(
+        consumeToken((x): number | Error => {
+          if (x === 2) return x;
+          else return new Error('x is not 2');
+        }),
+        tokens
+      );
     });
 
     it('should consume until an error is reached', () => {
@@ -61,7 +56,6 @@ describe('many one', () => {
       tokens = [3, 2, 1];
       res = many1(
         tokens => {
-
           return {
             tokens,
             consumed: 0,

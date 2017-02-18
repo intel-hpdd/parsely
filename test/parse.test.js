@@ -1,11 +1,11 @@
 // @flow
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 import parse from '../source/parse.js';
 import error from '../source/error.js';
 import token from '../source/token.js';
 import parserFn from './parser-fn.js';
-import {jasmine, expect, it, describe, beforeEach} from './jasmine.js';
+import { jasmine, expect, it, describe, beforeEach } from './jasmine.js';
 
 describe('parse', () => {
   let parser;
@@ -13,14 +13,7 @@ describe('parse', () => {
   beforeEach(() => {
     const value = x => token(x, 'value');
     parser = parserFn(
-      parse(
-        () => '',
-        [
-          value(fp.eq('a')),
-          value(fp.eq('b')),
-          value(fp.eq('c'))
-        ]
-      )
+      parse(() => '', [value(fp.eq('a')), value(fp.eq('b')), value(fp.eq('c'))])
     );
   });
 
@@ -33,12 +26,11 @@ describe('parse', () => {
       parsed
     } = parser('a b c');
 
-    expect(parsed)
-      .toEqual({
-        tokens: [],
-        consumed: 3,
-        result: 'abc'
-      });
+    expect(parsed).toEqual({
+      tokens: [],
+      consumed: 3,
+      result: 'abc'
+    });
   });
 
   it('should return the first error found', () => {
@@ -47,11 +39,10 @@ describe('parse', () => {
       tokens
     } = parser('a e c');
 
-    expect(parsed)
-      .toEqual({
-        tokens: tokens.slice(1),
-        consumed: 1,
-        result: error(tokens[1], ['value'])
-      });
+    expect(parsed).toEqual({
+      tokens: tokens.slice(1),
+      consumed: 1,
+      result: error(tokens[1], ['value'])
+    });
   });
 });
