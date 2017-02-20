@@ -21,15 +21,14 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 
-import type {
-  lexerTokens,
-  result,
-  tokensToResult
-} from './index.js';
+import type { lexerTokens, result, tokensToResult } from './index.js';
 
-export default fp.curry2((symbolFn:tokensToResult, tokens:lexerTokens):result => {
+export default fp.curry2((
+  symbolFn: tokensToResult,
+  tokens: lexerTokens
+): result => {
   let err;
   let out = {
     tokens,

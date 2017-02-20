@@ -2,13 +2,7 @@
 
 import optional from '../source/optional';
 
-import {
-  jasmine,
-  describe,
-  beforeEach,
-  it,
-  expect
-} from './jasmine.js';
+import { jasmine, describe, beforeEach, it, expect } from './jasmine.js';
 
 describe('parser optional', () => {
   let spy;
@@ -18,38 +12,32 @@ describe('parser optional', () => {
   });
 
   it('should be a function', () => {
-    expect(optional)
-      .toEqual(jasmine.any(Function));
+    expect(optional).toEqual(jasmine.any(Function));
   });
 
   it('should return an empty string if there are no tokens', () => {
-    expect(optional(spy, []))
-      .toEqual({
-        tokens: [],
-        consumed: 0,
-        result: ''
-      });
+    expect(optional(spy, [])).toEqual({
+      tokens: [],
+      consumed: 0,
+      result: ''
+    });
   });
 
   it('should not call the parser if there are no tokens', () => {
     optional(spy, []);
 
-    expect(spy)
-      .not
-      .toHaveBeenCalled();
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('should call the parser if there is a token', () => {
     optional(spy, [{}]);
 
-    expect(spy)
-      .toHaveBeenCalledOnceWith([{}]);
+    expect(spy).toHaveBeenCalledOnceWith([{}]);
   });
 
   it('should return the result of the parser', () => {
     spy.and.returnValue('foo');
 
-    expect(optional(spy, [{}]))
-      .toEqual('foo');
+    expect(optional(spy, [{}])).toEqual('foo');
   });
 });

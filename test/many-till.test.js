@@ -1,15 +1,9 @@
 // @flow
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 import manyTill from '../source/many-till.js';
 
-import {
-  beforeEach,
-  it,
-  expect,
-  jasmine,
-  describe
-} from './jasmine.js';
+import { beforeEach, it, expect, jasmine, describe } from './jasmine.js';
 
 describe('many till', () => {
   let consumeToken;
@@ -33,12 +27,14 @@ describe('many till', () => {
 
     beforeEach(() => {
       tokens = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-      res = manyTill(consumeToken(fp.identity), consumeToken((x) => {
-        if (x === 2)
-          return x;
-        else
-          return new Error('x is not 2');
-      }), tokens);
+      res = manyTill(
+        consumeToken(fp.identity),
+        consumeToken((x): number | Error => {
+          if (x === 2) return x;
+          else return new Error('x is not 2');
+        }),
+        tokens
+      );
     });
 
     it('should consume until the end fn ', () => {

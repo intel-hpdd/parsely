@@ -1,22 +1,13 @@
 {
-  "name": "intel-parsely",
+  "name": "@iml/parsely",
   "version": "3.2.1",
-  "description": "Boilerplate for node projects",
-  "main": "dist/source/index.js",
+  "description": "Parser combinators",
+  "main": "source/index.js",
   "scripts": {
-    "pretest": "npm run postversion",
-    "test": "npm run test:nobuild",
-    "test:nobuild": "NODE_ENV=test ./bin/test.js",
     "eslint": "eslint ./",
-    "flow": "flow",
-    "flow:cover": "flow-coverage-report -i 'source/**/*.js'",
-    "postversion": "./bin/build.sh",
-    "cover:dev": "npm run cover -- --reporter=html --reporter=lcov",
-    "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm run test:nobuild"
-  },
-  "nyc": {
-    "sourceMap": false,
-    "instrument": false
+    "test": "jest",
+    "cover": "NODE_ENV=test yarn test -- --coverage",
+    "flow": "flow"
   },
   "publishConfig": {
     "registry": "https://ubit-artifactory-or.intel.com/artifactory/api/npm/iml-npm-local"
@@ -24,39 +15,46 @@
   "pre-commit": [
     "eslint",
     "flow",
-    "flow:cover",
     "test"
   ],
   "repository": {
     "type": "git",
     "url": "git@github.intel.com:IML/parsely.git"
   },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./setup-jasmine-env.js",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/setup-jasmine-env.js",
+      "/test"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@iml)/"
+    ]
+  },
   "author": "IML Team",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "6.18.0",
-    "babel-core": "6.18.2",
     "babel-eslint": "7.1.1",
-    "babel-plugin-__coverage__": "11.0.0",
-    "babel-plugin-transform-class-properties": "6.19.0",
-    "babel-plugin-transform-flow-strip-types": "6.18.0",
-    "babel-plugin-transform-object-rest-spread": "6.19.0",
-    "babel-plugin-transform-strict-mode": "6.18.0",
-    "babel-preset-es2015": "6.18.0",
-    "eslint": "3.11.1",
-    "eslint-plugin-flowtype": "2.28.2",
+    "babel-plugin-transform-class-properties": "6.23.0",
+    "babel-plugin-transform-flow-strip-types": "6.22.0",
+    "babel-plugin-transform-object-rest-spread": "6.23.0",
+    "babel-preset-env": "1.1.8",
+    "eslint": "3.15.0",
+    "eslint-config-prettier": "1.1.1",
+    "eslint-plugin-flowtype": "2.30.0",
     "eslint-plugin-import": "2.2.0",
-    "flow-bin": "0.36.0",
-    "flow-coverage-report": "0.2.0",
+    "eslint-plugin-prettier": "2.0.0",
+    "flow-bin": "0.39.0",
     "intel-deep-freeze": "2.0.0",
     "intel-flow-jasmine": "1.6.0",
-    "intel-jasmine-junit-reporter": "1.0.0",
+    "jasmine-reporters": "2.2.0",
     "intel-jasmine-n-matchers": "2.1.1",
-    "jasmine": "2.5.2",
-    "nyc": "10.0.0",
-    "pre-commit": "1.1.3"
+    "jest": "18.1.0",
+    "pre-commit": "1.2.2",
+    "prettier": "0.16.0"
   },
   "dependencies": {
-    "intel-fp": "7.0.0"
+    "@iml/fp": "7.0.8"
   }
 }

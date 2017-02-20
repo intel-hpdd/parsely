@@ -21,13 +21,9 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from 'intel-fp';
+import * as fp from '@iml/fp';
 
-import type {
-  lexerTokens,
-  result,
-  tokensToResult
-} from './index.js';
+import type { lexerTokens, result, tokensToResult } from './index.js';
 
 const getExpected = fp.flow(
   fp.map(x => x.result),
@@ -36,7 +32,10 @@ const getExpected = fp.flow(
   fp.uniqBy(fp.identity)
 );
 
-export default fp.curry2((choices:tokensToResult[], tokens:lexerTokens):result => {
+export default fp.curry2((
+  choices: tokensToResult[],
+  tokens: lexerTokens
+): result => {
   let out;
   const errors = [];
 
@@ -53,19 +52,16 @@ export default fp.curry2((choices:tokensToResult[], tokens:lexerTokens):result =
     }
   });
 
-  if (out)
-    return out;
+  if (out) return out;
 
   const errs = errors.pop();
   const err = errs.slice(-1).pop();
 
-  if (errs.length === 1)
-    return err;
+  if (errs.length === 1) return err;
 
   const expected = getExpected(errs);
 
-  if (expected.length === 1)
-    return err;
+  if (expected.length === 1) return err;
 
   return {
     ...err,
