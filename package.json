@@ -1,6 +1,6 @@
 {
   "name": "@iml/parsely",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "description": "Parser combinators",
   "main": "source/index.js",
   "scripts": {
