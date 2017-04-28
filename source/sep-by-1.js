@@ -21,15 +21,11 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from '@iml/fp';
+import type { LexerToken, Result, tokensToResult } from './index.js';
 
-import type { lexerTokens, result, tokensToResult } from './index.js';
-
-export default fp.curry3(function sepBy1(
-  symbolFn: tokensToResult,
-  sepFn: tokensToResult,
-  tokens: lexerTokens
-): result {
+export default (symbolFn: tokensToResult) => (sepFn: tokensToResult) => (
+  tokens: LexerToken[]
+): Result => {
   let err;
   let out = {
     tokens,
@@ -74,4 +70,4 @@ export default fp.curry3(function sepBy1(
   }
 
   return err ? err : out;
-});
+};

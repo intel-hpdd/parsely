@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@iml/fp';
+import * as fp from '@mfl/fp';
 import token from '../source/token.js';
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';
@@ -11,7 +11,7 @@ describe('token', () => {
   let value, parser;
 
   beforeEach(() => {
-    value = token(fp.always(true), 'value');
+    value = token(fp.always(true))('value');
 
     parser = parserFn(value);
   });
@@ -37,8 +37,7 @@ describe('token', () => {
   });
 
   it('should report errors on content mismatch', () => {
-    const { parsed, tokens } = parserFn(
-      token(x => x === 'bar', 'value'),
+    const { parsed, tokens } = parserFn(token(x => x === 'bar')('value'))(
       'foo'
     );
 
