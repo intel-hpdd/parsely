@@ -1,20 +1,22 @@
 // @flow
 
-import * as fp from '@iml/fp';
+import * as fp from '@mfl/fp';
 import sepBy1 from '../source/sep-by-1.js';
+import { ParseError } from '../source/error.js';
+import { tokenFactory } from './utils.js';
 
 import { describe, beforeEach, it, expect } from './jasmine.js';
 
 describe('parser sepBy1', () => {
-  let ifToken;
+  let ifToken, token;
 
   beforeEach(() => {
-    ifToken = fp.curry2((elseFn, tokens) => {
+    ifToken = elseFn => tokens => {
       if (!tokens.length)
         return {
           tokens,
           consumed: 0,
-          result: new Error('boom!')
+          result: new ParseError(null, ['boom!'])
         };
 
       const [t, ...restTokens] = tokens;
@@ -24,12 +26,14 @@ describe('parser sepBy1', () => {
         consumed: 1,
         result: elseFn(t)
       };
-    });
+    };
+
+    token = tokenFactory();
   });
 
   it('should match a symbol', () => {
     expect(
-      sepBy1(ifToken(fp.always('bar')), ifToken(fp.always(',')), [{}])
+      sepBy1(ifToken(fp.always('bar')))(ifToken(fp.always(',')))([token('a')])
     ).toEqual({
       tokens: [],
       consumed: 1,
@@ -39,7 +43,11 @@ describe('parser sepBy1', () => {
 
   it('should match a symbol, sep, symbol', () => {
     expect(
-      sepBy1(ifToken(fp.always('bar')), ifToken(fp.always(',')), [{}, {}, {}])
+      sepBy1(ifToken(fp.always('bar')))(ifToken(fp.always(',')))([
+        token('a'),
+        token('b'),
+        token('c')
+      ])
     ).toEqual({
       tokens: [],
       consumed: 3,
@@ -49,21 +57,24 @@ describe('parser sepBy1', () => {
 
   it('should error on symbol, sep', () => {
     expect(
-      sepBy1(ifToken(fp.always('bar')), ifToken(fp.always(',')), [{}, {}])
+      sepBy1(ifToken(fp.always('bar')))(ifToken(fp.always(',')))([
+        token('a'),
+        token('b')
+      ])
     ).toEqual({
       tokens: [],
       consumed: 2,
-      result: new Error('boom!')
+      result: new ParseError(null, ['boom!'])
     });
   });
 
   it('should error if nothing is consumed', () => {
     expect(
-      sepBy1(ifToken(fp.always('bar')), ifToken(fp.always(',')), [])
+      sepBy1(ifToken(fp.always('bar')))(ifToken(fp.always(',')))([])
     ).toEqual({
       tokens: [],
       consumed: 0,
-      result: new Error('boom!')
+      result: new ParseError(null, ['boom!'])
     });
   });
 
@@ -71,30 +82,33 @@ describe('parser sepBy1', () => {
     let calls = 0;
 
     expect(
-      sepBy1(
-        tokens => {
-          if (calls > 0)
-            return {
-              tokens,
-              consumed: 0,
-              result: new Error('boom!')
-            };
-
-          calls++;
-
+      sepBy1(tokens => {
+        if (calls > 0)
           return {
-            tokens: tokens.slice(1),
-            consumed: 1,
-            result: 'bar'
+            tokens,
+            consumed: 0,
+            result: new ParseError(null, ['boom!'])
           };
-        },
-        ifToken(fp.always(',')),
-        [{}, {}, {}]
-      )
+
+        calls++;
+
+        return {
+          tokens: tokens.slice(1),
+          consumed: 1,
+          result: 'bar'
+        };
+      })(ifToken(fp.always(',')))([token('a'), token('b'), token('c')])
     ).toEqual({
-      tokens: [{}],
+      tokens: [
+        {
+          content: 'c',
+          name: 'token',
+          start: 2,
+          end: 3
+        }
+      ],
       consumed: 2,
-      result: new Error('boom!')
+      result: new ParseError(null, ['boom!'])
     });
   });
 });

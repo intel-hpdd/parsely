@@ -23,9 +23,9 @@
 
 import error from './error.js';
 
-import type { lexerTokens, result } from './index.js';
+import type { LexerToken, Result } from './index.js';
 
-export default function endOfString(tokens: lexerTokens): result {
+export default function endOfString(tokens: LexerToken[]): Result {
   return {
     tokens,
     consumed: 0,

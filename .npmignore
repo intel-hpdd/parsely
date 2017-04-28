@@ -6,9 +6,7 @@
 .gitignore
 .idea
 yarn.lock
-setup-jasmine-env.js
 node_modules
 /test
 /coverage
 *.log
-run_test.sh

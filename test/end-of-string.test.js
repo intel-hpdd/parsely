@@ -28,10 +28,7 @@ describe('parser end of string', () => {
   });
 
   it('should return an error if there are tokens left', () => {
-    const {
-      parsed,
-      tokens
-    } = parser('foo');
+    const { parsed, tokens } = parser('foo');
 
     expect(parsed).toEqual({
       tokens: [tokens[0]],

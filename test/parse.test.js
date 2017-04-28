@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@iml/fp';
+import * as fp from '@mfl/fp';
 import parse from '../source/parse.js';
 import error from '../source/error.js';
 import token from '../source/token.js';
@@ -11,9 +11,9 @@ describe('parse', () => {
   let parser;
 
   beforeEach(() => {
-    const value = x => token(x, 'value');
+    const value = x => token(x)('value');
     parser = parserFn(
-      parse(() => '', [value(fp.eq('a')), value(fp.eq('b')), value(fp.eq('c'))])
+      parse(() => '')([value(fp.eq('a')), value(fp.eq('b')), value(fp.eq('c'))])
     );
   });
 
@@ -22,9 +22,7 @@ describe('parse', () => {
   });
 
   it('should reduce to an output string', () => {
-    const {
-      parsed
-    } = parser('a b c');
+    const { parsed } = parser('a b c');
 
     expect(parsed).toEqual({
       tokens: [],
@@ -34,10 +32,7 @@ describe('parse', () => {
   });
 
   it('should return the first error found', () => {
-    const {
-      parsed,
-      tokens
-    } = parser('a e c');
+    const { parsed, tokens } = parser('a e c');
 
     expect(parsed).toEqual({
       tokens: tokens.slice(1),

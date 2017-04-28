@@ -21,9 +21,9 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type { lexerTokens, lexerToken } from './index.js';
+import type { LexerToken } from './index.js';
 
-export type lexerType = {
+export type LexerEntry = {
   name: string,
   pattern: RegExp,
   ignore?: boolean
@@ -37,14 +37,12 @@ getLexer.whiteSpace = {
 
 export default getLexer;
 
-function getLexer(types: lexerType[]) {
-  return function tokenize(str: ?string): lexerTokens {
-    str = str || '';
-
+function getLexer(types: LexerEntry[]) {
+  return (str: string = ''): LexerToken[] => {
     const matches = (function buildTokens(str: string, ptr: number) {
       const arr = [];
 
-      const foundMatch = types.some(function findMatch(type) {
+      const foundMatch = types.some(type => {
         const match = str.match(type.pattern);
 
         if (match) {
@@ -85,10 +83,7 @@ function getLexer(types: lexerType[]) {
       return str.length ? arr.concat(buildTokens(str, ptr)) : arr;
     })(str, 0);
 
-    matches.forEach(function doubleLinkedList(
-      token: lexerToken,
-      index: number
-    ) {
+    matches.forEach((token: LexerToken, index: number) => {
       if (index > 0) token.prev = matches[index - 1];
 
       if (index < matches.length - 1) token.next = matches[index + 1];
@@ -98,9 +93,7 @@ function getLexer(types: lexerType[]) {
   };
 
   function consumeError(str) {
-    const foundMatch = types.some(function findMatch(type) {
-      return str.match(type.pattern);
-    });
+    const foundMatch = types.some(type => str.match(type.pattern));
 
     return foundMatch || !str.length ? '' : str[0] + consumeError(str.slice(1));
   }

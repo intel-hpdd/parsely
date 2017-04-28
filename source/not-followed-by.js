@@ -21,12 +21,11 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from '@iml/fp';
 import error from './error.js';
 
-import type { lexerTokens, result, tokensToResult } from './index.js';
+import type { LexerToken, Result, tokensToResult } from './index.js';
 
-export default fp.curry2((p: tokensToResult, tokens: lexerTokens): result => {
+export default (p: tokensToResult) => (tokens: LexerToken[]): Result => {
   const parsed = p(tokens);
 
   if (parsed.result instanceof Error)
@@ -41,4 +40,4 @@ export default fp.curry2((p: tokensToResult, tokens: lexerTokens): result => {
       consumed: 0,
       result: error(tokens[0], ['a non-match'])
     };
-});
+};

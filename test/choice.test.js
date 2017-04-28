@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@iml/fp';
+import * as fp from '@mfl/fp';
 import choice from '../source/choice.js';
 import token from '../source/token.js';
 import error from '../source/error.js';
@@ -20,9 +20,9 @@ describe('parser choice', () => {
     beforeEach(() => {
       parser = parserFn(
         choice([
-          token(fp.eq('a'), 'value'),
-          token(fp.eq('b'), 'value'),
-          token(fp.always(true), 'equals')
+          token(fp.eq('a'))('value'),
+          token(fp.eq('b'))('value'),
+          token(fp.always(true))('equals')
         ])
       );
     });
@@ -58,19 +58,16 @@ describe('parser choice', () => {
     });
 
     it('should return the most specific error', () => {
-      const {
-        parsed
-      } = parserFn(
-        choice([
-          parse(() => '', [
-            token(fp.eq('a'), 'value'),
-            token(fp.always(true), 'equals'),
-            token(fp.always(true), 'join')
-          ]),
-          token(fp.eq('b'), 'value')
+      const choices = choice([
+        parse(() => '')([
+          token(fp.eq('a'))('value'),
+          token(fp.always(true))('equals'),
+          token(fp.always(true))('join')
         ]),
-        'a ='
-      );
+        token(fp.eq('b'))('value')
+      ]);
+
+      const { parsed } = parserFn(choices)('a =');
 
       expect(parsed).toEqual({
         tokens: [],

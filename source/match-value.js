@@ -21,7 +21,7 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from '@iml/fp';
+import * as fp from '@mfl/fp';
 import token from './token.js';
 
 import { onError, onSuccess, ParseError } from './error.js';
@@ -30,7 +30,7 @@ import type { tokensToResult } from './index.js';
 
 export const matchValue = (name: string): tokensToResult =>
   fp.flow(
-    token(fp.eq(name), 'value'),
+    token(fp.eq(name))('value'),
     onError((e: ParseError): ParseError => e.adjust([name]))
   );
 

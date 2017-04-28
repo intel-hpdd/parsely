@@ -21,9 +21,7 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import * as fp from '@iml/fp';
-
-import type { lexerToken, result } from './index.js';
+import type { LexerToken, Result } from './index.js';
 
 const defaultT = {
   start: Infinity,
@@ -32,7 +30,7 @@ const defaultT = {
   content: ''
 };
 
-function getMessage(t: lexerToken, expected: string[]): string {
+function getMessage(t: LexerToken, expected: string[]): string {
   let str = 'Expected';
 
   str += expected.length > 1
@@ -47,11 +45,11 @@ function getMessage(t: lexerToken, expected: string[]): string {
 }
 
 export class ParseError extends Error {
-  expected: Array<string>;
+  expected: string[];
   start: number;
   end: number;
-  adjust: (x: Array<string>) => ParseError;
-  constructor(t: ?lexerToken, expected: Array<string>) {
+  adjust: (x: string[]) => ParseError;
+  constructor(t: ?LexerToken, expected: string[]) {
     t = t || defaultT;
 
     super(getMessage(t, expected));
@@ -63,31 +61,27 @@ export class ParseError extends Error {
   }
 }
 
-export default (t: ?lexerToken, expected: string[]): ParseError =>
+export default (t: ?LexerToken, expected: string[]): ParseError =>
   new ParseError(t, expected);
 
-export const onSuccess = fp.curry2((
-  fn: (s: string) => string | ParseError,
-  result: result
-): result => {
+export const onSuccess = (fn: (s: string) => string | ParseError) => (
+  result: Result
+): Result => {
   if (!(result.result instanceof Error))
     return {
       ...result,
       result: fn(result.result)
     };
-  else
-    return result;
-});
+  else return result;
+};
 
-export const onError = fp.curry2((
-  fn: (e: ParseError) => ParseError | string,
-  result: result
-): result => {
+export const onError = (fn: (e: ParseError) => ParseError | string) => (
+  result: Result
+): Result => {
   if (result.result instanceof Error)
     return {
       ...result,
       result: fn(result.result)
     };
-  else
-    return result;
-});
+  else return result;
+};

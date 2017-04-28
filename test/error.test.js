@@ -65,7 +65,7 @@ describe('error module', () => {
 
     it('should change the result', () => {
       expect(
-        onSuccess(() => 'hi!', {
+        onSuccess(() => 'hi!')({
           tokens: [],
           consumed: 5,
           result: 'hello'
@@ -79,7 +79,7 @@ describe('error module', () => {
 
     it('should keep an error result', () => {
       expect(
-        onSuccess(() => 'hi!', {
+        onSuccess(() => 'hi!')({
           tokens: [],
           consumed: 0,
           result: e
@@ -99,7 +99,7 @@ describe('error module', () => {
 
     it('should change the result', () => {
       expect(
-        onError(e => e.adjust(['baz']), {
+        onError(e => e.adjust(['baz']))({
           tokens: [],
           consumed: 0,
           result: e
@@ -113,7 +113,7 @@ describe('error module', () => {
 
     it('should keep a success result', () => {
       expect(
-        onError(e => e.adjust(['baz']), {
+        onError(e => e.adjust(['baz']))({
           tokens: [],
           consumed: 5,
           result: 'hello'

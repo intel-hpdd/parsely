@@ -41,21 +41,19 @@ export const parseStr = parse((): string => '');
 import { ParseError } from './error';
 export { ParseError, onSuccess, onError, default as error } from './error';
 
-export type result = {
-  tokens: lexerTokens,
+export type Result = {
+  tokens: LexerToken[],
   consumed: number,
   result: ParseError | string
 };
 
-export type tokensToResult = (tokens: lexerTokens) => result;
+export type tokensToResult = (LexerToken[]) => Result;
 
-export type lexerToken = {
+export type LexerToken = {
   content: string,
   name: string,
   start: number,
   end: number,
-  next?: lexerToken,
-  prev?: lexerToken
+  next?: LexerToken,
+  prev?: LexerToken
 };
-
-export type lexerTokens = Array<lexerToken>;

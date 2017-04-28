@@ -20,7 +20,7 @@ describe('parser not followed by', () => {
       result: ''
     });
 
-    expect(notFollowedBy(spy, [])).toEqual({
+    expect(notFollowedBy(spy)([])).toEqual({
       tokens: [],
       consumed: 0,
       result: new Error('Expected a non-match got end of string')
@@ -32,7 +32,7 @@ describe('parser not followed by', () => {
       result: new Error('oh noes!')
     });
 
-    expect(notFollowedBy(spy, [])).toEqual({
+    expect(notFollowedBy(spy)([])).toEqual({
       tokens: [],
       consumed: 0,
       result: ''
