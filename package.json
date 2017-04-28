@@ -33,7 +33,6 @@
   "author": "MFL Team",
   "license": "MIT",
   "devDependencies": {
-    "@mfl/deep-freeze": "2.0.0",
     "@mfl/flow-jasmine": "1.6.1",
     "@mfl/jasmine-n-matchers": "2.1.1",
     "babel-eslint": "7.2.3",
