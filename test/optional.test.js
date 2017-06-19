@@ -26,7 +26,7 @@ describe('parser optional', () => {
   });
 
   it('should not call the parser if there are no tokens', () => {
-    optional(spy, []);
+    optional(spy)([]);
 
     expect(spy).not.toHaveBeenCalled();
   });
@@ -34,7 +34,7 @@ describe('parser optional', () => {
   it('should call the parser if there is a token', () => {
     optional(spy)([token]);
 
-    expect(spy).toHaveBeenCalledOnceWith([token]);
+    expect(spy).toHaveBeenCalledWith([token]);
   });
 
   it('should return the result of the parser', () => {
