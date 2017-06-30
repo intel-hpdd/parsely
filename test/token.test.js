@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@mfl/fp';
+import * as fp from '@iml/fp';
 import token from '../source/token.js';
 import parserFn from './parser-fn.js';
 import error from '../source/error.js';

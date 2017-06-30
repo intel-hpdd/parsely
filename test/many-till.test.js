@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@mfl/fp';
+import * as fp from '@iml/fp';
 import manyTill from '../source/many-till.js';
 import { ParseError } from '../source/error.js';
 import { tokenFactory } from './utils.js';
