@@ -17,9 +17,8 @@ const defaultT = {
 function getMessage(t: LexerToken, expected: string[]): string {
   let str = 'Expected';
 
-  str += expected.length > 1
-    ? ` one of ${expected.join(', ')}`
-    : ` ${expected[0]}`;
+  str +=
+    expected.length > 1 ? ` one of ${expected.join(', ')}` : ` ${expected[0]}`;
 
   str += isFinite(t.start)
     ? ` got ${t.content} at character ${t.start}`
