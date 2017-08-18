@@ -1,6 +1,6 @@
 // @flow
 
-import * as fp from '@mfl/fp';
+import * as fp from '@iml/fp';
 import sepBy1 from '../source/sep-by-1.js';
 import { ParseError } from '../source/error.js';
 import { tokenFactory } from './utils.js';
