@@ -34,21 +34,21 @@
   "license": "MIT",
   "devDependencies": {
     "@iml/flow-jasmine": "1.6.1",
-    "babel-eslint": "7.2.3",
+    "babel-eslint": "^8.0.0",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "^1.5.2",
-    "eslint": "^4.0.0",
-    "eslint-config-prettier": "^2.2.0",
-    "eslint-plugin-flowtype": "^2.34.0",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-prettier": "^2.1.2",
-    "flow-bin": "^0.53.1",
+    "eslint": "^4.6.1",
+    "eslint-config-prettier": "^2.4.0",
+    "eslint-plugin-flowtype": "^2.35.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.2.0",
+    "flow-bin": "^0.54.1",
     "jasmine-reporters": "2.2.1",
-    "jest": "^20.0.4",
+    "jest": "^21.1.0",
     "pre-commit": "1.2.2",
-    "prettier": "^1.4.4"
+    "prettier": "^1.6.1"
   },
   "dependencies": {
     "@iml/fp": "^8.0.3"
